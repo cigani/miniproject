@@ -3,7 +3,7 @@ import brian2 as b2
 import matplotlib.pyplot as plt
 import numpy as np
 
-
+#TODO: copy in my old spike finding algorithim
 def plotData(valStat, title=None):
     """Plots a TimedArray for values I and v
 
@@ -11,7 +11,7 @@ def plotData(valStat, title=None):
         valStat (TimedArray): the data to plot
         title (string, optional): plot title to display
     """
-
+    #TODO: plotting for infs and channel currents
     plt.subplot(311)
     plt.plot(valStat.t/b2.ms, valStat.vm[0]/b2.mV, lw=2)
 
@@ -71,10 +71,11 @@ def hhNeuron(curr, simtime):
     ENa = 115 * b2.mV
     gl = 0.3 * b2.msiemens
     gK = 36 * b2.msiemens
-    gNa = 1.5 * 120 * b2.msiemens 
+    gNa = 1.5 * 120 * b2.msiemens
     C = 1 * b2.ufarad
 
     # forming HH model with differential equations
+    # TODO: Figure out if Na/K currents are just gNa/k * volts
     eqs = '''
     i_e = curr(t) : amp
     membrane_Im = i_e + gNa*m**3*h*(ENa-vm) + \
@@ -89,6 +90,11 @@ def hhNeuron(curr, simtime):
     dm/dt = alpham*(1-m)-betam*m : 1
     dn/dt = alphan*(1-n)-betan*n : 1
     dvm/dt = membrane_Im/C : volt
+    gNa0 : siemens
+    gK0 : siemens
+    hinf = alphah/(alphah+betah) : 1
+    minf = alpham/(alpham+betam) : 1
+    ninf = alphan/(alphan+betan) : 1
     '''
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
@@ -100,7 +106,9 @@ def hhNeuron(curr, simtime):
     neuron.n = 0.317676914061
 
     # tracking parameters
-    valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n', 'h'], record=True)
+    # TODO: add Na / K currents
+    valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
+    'h', 'hinf','minf','ninf'], record=True)
 
     # running the simulation
     b2.run(simtime)
