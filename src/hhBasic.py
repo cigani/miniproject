@@ -65,13 +65,13 @@ def hhNeuron(curr, simtime):
         ['vm', 'i_e', 'm', 'n', 'h']
     """
 
-    # neuron parameters
+    # neuron parameters from project file
     El = 10.6 * b2.mV
     EK = -12 * b2.mV
     ENa = 115 * b2.mV
     gl = 0.3 * b2.msiemens
     gK = 36 * b2.msiemens
-    gNa = 1.5 * 120 * b2.msiemens # Edited to account for a 1.5 - fold increase in Na channel density
+    gNa = 1.5 * 120 * b2.msiemens 
     C = 1 * b2.ufarad
 
     # forming HH model with differential equations
@@ -93,7 +93,7 @@ def hhNeuron(curr, simtime):
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
 
-    # parameter initialization
+    # parameter initialization #TODO: Find paramter logic
     neuron.vm = 0
     neuron.m = 0.0529324852572
     neuron.h = 0.596120753508
