@@ -91,4 +91,4 @@ def hhStep(its=0,ite=150,iamp=0,te=200,sr=1, doPlot=False):
     stateVals = hhNeuron(current,te*b2.ms)
 
     # TODO: Add plotting stuff
-
+    return stateVals
