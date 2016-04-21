@@ -24,19 +24,19 @@ plt.ylabel('v [mV]')
 plt.grid()
 
 plt.subplot(412)
-plt.plot(hex.t/b2.ms, hex.ninf[0] / nrmfactor / b2.mV, 'black', lw=2)
+plt.plot(hex.t/b2.ms, hex.n[0] / nrmfactor / b2.mV, 'black', lw=2)
 plt.ylabel('n activation')
 plt.xlabel('t [ms]')
 
 
 plt.subplot(413)
-plt.plot(hex.t/b2.ms, hex.minf[0] / nrmfactor /b2.mV, 'blue', lw=2)
+plt.plot(hex.t/b2.ms, hex.m[0] / nrmfactor /b2.mV, 'blue', lw=2)
 plt.ylabel('m activation')
 plt.xlabel('t [ms]')
 
 
 plt.subplot(414)
-plt.plot(hex.t/b2.ms, hex.hinf[0] / nrmfactor /b2.mV, 'red', lw=2)
+plt.plot(hex.t/b2.ms, hex.h[0] / nrmfactor /b2.mV, 'red', lw=2)
 plt.ylabel('h activation')
 plt.xlabel('t [ms]')
 

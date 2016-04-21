@@ -71,7 +71,7 @@ def hhNeuron(curr, simtime):
     ENa = 115 * b2.mV
     gl = 0.3 * b2.msiemens
     gK = 36 * b2.msiemens
-    gNa = 1.5 * 120 * b2.msiemens
+    gNa = 1.5*120 * b2.msiemens #*1.5
     C = 1 * b2.ufarad
 
     # forming HH model with differential equations
@@ -95,6 +95,9 @@ def hhNeuron(curr, simtime):
     hinf = alphah/(alphah+betah) : 1
     minf = alpham/(alpham+betam) : 1
     ninf = alphan/(alphan+betan) : 1
+    th = 1/(alphah+betah) : second
+    tm = 1/(alpham+betam) : second
+    tn = 1/(alphan+betan) : second
     '''
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
@@ -110,7 +113,7 @@ def hhNeuron(curr, simtime):
     # tracking parameters
     # TODO: add Na / K currents
     valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
-    'h', 'hinf','minf','ninf'], record=True)
+    'h', 'hinf','minf','ninf', 'tm','th','tn'], record=True)
 
     # running the simulation
     b2.run(simtime)
