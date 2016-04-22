@@ -51,6 +51,75 @@ def plotData(valStat, title=None):
     plt.show()
 
 
+
+def hhNeuronA(curr, simtime):
+
+    """Simple Hodgkin-Huxley neuron implemented in Brian2.
+
+    Args:
+        curr  (TimedArray): Input current injected into the HH neuron
+        simtime (float): Simulation time [seconds]
+
+    Returns:
+        StateM onitor: Brian2 StateMonitor with valStat fields
+        [vm', 'i_e', 'm', 'n','h', 'hinf','minf','ninf', 'tm',
+        'th','tn']
+    """
+
+    # neuron parameters from project file
+    El = 10.6 * b2.mV
+    EK = -12 * b2.mV
+    ENa = 115 * b2.mV
+    EIh = -45 * b2.mV
+    gIh = 20.6 * b2.msiemens
+    gl = 0.3 * b2.msiemens
+    gK = 36 * b2.msiemens
+    gNa = 1.5*120 * b2.msiemens #*1.5
+    C = 1 * b2.ufarad
+
+    # forming HH model with differential equations
+    # TODO: Figure out if Na/K currents are just gNa/k * volts
+    eqs = '''
+    i_e = curr(t) : amp
+    membrane_Im = i_e + gNa*m**3*h*(ENa-vm) + \
+        gl*(El-vm) + gK*n**4*(EK-vm) + gIh*p*(EIh-vm) : amp
+    alphah = .07*exp(-.05*vm/mV)/ms    : Hz
+    alpham = .1*(25*mV-vm)/(exp(2.5-.1*vm/mV)-1)/mV/ms : Hz
+    alphan = .01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
+    alphap = .00643*(154.9*mV+vm)/(exp((154.9*mV+vm)/(11.9*mV)-1))/mV/ms \
+             : Hz
+    betah = 1./(1+exp(3.-.1*vm/mV))/ms : Hz
+    betam = 4*exp(-.0556*vm/mV)/ms : Hz
+    betan = .125*exp(-.0125*vm/mV)/ms : Hz
+    betap = .193*exp(vm/(33.1*mV))/ms : Hz
+    dh/dt = alphah*(1-h)-betah*h : 1
+    dm/dt = alpham*(1-m)-betam*m : 1
+    dn/dt = alphan*(1-n)-betan*n : 1
+    dp/dt = alphap*(1-p)-betap*p : 1
+    dvm/dt = membrane_Im/C : volt
+    '''
+
+
+    neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
+
+    # parameter initialization #TODO: Find paramter logic
+        # Maybe apply stochastic methods from brian docs:
+        # 'we can do this by using the symbol xi in differential equations'
+    neuron.vm = 0
+    neuron.m = 0.0529324852572
+    neuron.h = 0.596120753508
+    neuron.n = 0.317676914061
+    neuron.p = 0.32321313423
+
+    # tracking parameters
+    # TODO: add Na / K currents
+    valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
+    'h', 'p'], record=True)
+
+    # running the simulation
+    b2.run(simtime)
+    return (valStat)
+
 def hhNeuron(curr, simtime):
 
     """Simple Hodgkin-Huxley neuron implemented in Brian2.
@@ -121,7 +190,7 @@ def hhNeuron(curr, simtime):
 
 
 def hhStep(itStart=20, itEnd=180, iAmp=7,
-            tEnd=200,dt = 1, doPlot=True):
+            tEnd=200,dt = 1, doPlot=True, ntype = 1):
 
     """Run the Hodgkin-Huley neuron for a step current input.
 
@@ -141,9 +210,10 @@ def hhStep(itStart=20, itEnd=180, iAmp=7,
     tmp = np.zeros(tEnd) * b2.uamp
     tmp[int(itStart):int(itEnd)] = iAmp * b2.uamp
     curr = b2.TimedArray(tmp, dt=dt*b2.ms)
-
-    valStat = hhNeuron(curr, tEnd * b2.ms)
-
+    if ntype==1:
+        valStat = hhNeuron(curr, tEnd * b2.ms)
+    else:
+        valStat = hhNeuronA(curr,tEnd* b2.ms)
     if doPlot:
         plotData(
             valStat,
