@@ -5,14 +5,6 @@ import brian2 as b2
 
 hex = hhBasic.hhStep(itStart=20, itEnd=35, tEnd=35, doPlot=False)
 
-"""
-print hex.vm[0]
-print hex.ninf[0]
-print hex.minf[0]
-print hex.hinf[0]
-"""
-#TODO: Add tau plots
-
 traceall = np.append(hex.minf[0], [hex.ninf[0], hex.hinf[0]])
 nrmfactor = np.max(traceall)/b2.mV
 
@@ -25,20 +17,21 @@ plt.grid()
 
 plt.subplot(412)
 plt.plot(hex.t/b2.ms, hex.n[0] / nrmfactor / b2.mV, 'black', lw=2)
-plt.ylabel('n activation')
+plt.ylabel('act./inact.')
 plt.xlabel('t [ms]')
-
+plt.legend('n')
 
 plt.subplot(413)
 plt.plot(hex.t/b2.ms, hex.m[0] / nrmfactor /b2.mV, 'blue', lw=2)
-plt.ylabel('m activation')
+plt.ylabel('act./inact.')
 plt.xlabel('t [ms]')
-
+plt.legend('m')
 
 plt.subplot(414)
 plt.plot(hex.t/b2.ms, hex.h[0] / nrmfactor /b2.mV, 'red', lw=2)
-plt.ylabel('h activation')
+plt.ylabel('act./inact.')
 plt.xlabel('t [ms]')
+plt.legend('h')
 
 plt.show()
 
@@ -58,16 +51,19 @@ plt.show()
 '''
 
 # Plot of the activtion variables [inf variants] vs time i think it works
-# TODO: Make sure this is right. Need to add the non inf variants
+# TODO: find units of n/m/h (Arbitrary units i think).
 plt.subplot(311)
 plt.plot(hex.vm[0]/b2.mV, hex.ninf[0] /nrmfactor /b2.mV, 'red', lw=2)
-plt.ylabel('n acti/deacti')
+plt.ylabel('A.U')
+plt.legend('ninf')
 plt.subplot(312)
 plt.plot(hex.vm[0]/b2.mV, hex.minf[0] /nrmfactor /b2.mV, 'black', lw=2)
-plt.ylabel('m acti/deacti')
+plt.ylabel('A.U')
+plt.legend('minf')
 plt.subplot(313)
 plt.plot(hex.vm[0]/b2.mV, hex.hinf[0] /nrmfactor /b2.mV, 'blue', lw=2)
-plt.ylabel('h acti/deacti')
+plt.ylabel('A.U')
+plt.legend('hinf')
 plt.xlabel('v [mV]')
 
 plt.show()

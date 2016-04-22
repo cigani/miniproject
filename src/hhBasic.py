@@ -3,7 +3,6 @@ import brian2 as b2
 import matplotlib.pyplot as plt
 import numpy as np
 
-#TODO: copy in my old spike finding algorithim - or use builtin
 def plotData(valStat, title=None):
     """Plots a TimedArray for values I and v
 
@@ -11,7 +10,7 @@ def plotData(valStat, title=None):
         valStat (TimedArray): the data to plot
         title (string, optional): plot title to display
     """
-    #TODO: plotting for infs and channel currents
+
     plt.subplot(311)
     plt.plot(valStat.t/b2.ms, valStat.vm[0]/b2.mV, lw=2)
 
@@ -61,8 +60,9 @@ def hhNeuron(curr, simtime):
         simtime (float): Simulation time [seconds]
 
     Returns:
-        StateMonitor: Brian2 StateMonitor with valStatorded fields
-        ['vm', 'i_e', 'm', 'n', 'h']
+        StateMonitor: Brian2 StateMonitor with valStat fields
+        [vm', 'i_e', 'm', 'n','h', 'hinf','minf','ninf', 'tm',
+        'th','tn']
     """
 
     # neuron parameters from project file
@@ -117,8 +117,7 @@ def hhNeuron(curr, simtime):
 
     # running the simulation
     b2.run(simtime)
-
-    return valStat
+    return (valStat)
 
 
 def hhStep(itStart=20, itEnd=180, iAmp=7,
@@ -222,3 +221,96 @@ def hhRamp(itStart=30, itEnd=270, iAmp=20.,
         )
 
     return valStat
+
+def valTuple(valStat):
+    """ Extract our data from numpy arrays into tuple
+
+    Args:
+        valStat from StateMonitor
+
+    Returns:
+        [t, vm, i_e, hinf, ninf, minf, tm, tn, th] unit corrected
+        normalizes acti/deacti parameters
+    """
+    fulltrace = np.append(valStat.minf[0], [valStat.ninf[0],
+                valStat.hinf[0]])
+    nrmfactor = np.max(fulltrace)/b2.mV
+    t = valStat.t / b2.ms
+    v = valStat.vm[0] / b2.mV
+    i_e = valStat.i_e[0] /b2.pA # i is reserved for index, I breaks PEP
+    hinf = valStat.hinf[0]/nrmfactor / b2.mV
+    ninf = valStat.ninf[0]/nrmfactor / b2.mV
+    minf = valStat.minf[0]/nrmfactor / b2.mV
+    tm = valStat.tm[0] / b2.ms
+    tn = valStat.tn[0] / b2.ms
+    th = valStat.th[0] / b2.ms
+
+    return (t,v,i_e,hinf,ninf,minf,tm,tn,th)
+
+def spikeGet(t,v,vT=None):
+    """  Extract spike time using boolean logic. Seperate array at T/F
+         order offset one place, compare and detect.
+
+    Args:
+        t: numpy time array
+        v: numpy voltage array
+        vT = voltage threshold (optional)
+
+    Returns:
+        firing rate of neuron
+    """
+
+    if vT == None:
+        vT = (0.85*(np.max(v)-np.sqrt(np.std(v))))
+    vTF = v>vT
+    # use numpy's index-a-index functionality to extract T/F shift point
+    # this gives the point where false becomes true.
+    idx = np.nonzero((vTF[:-1]==0) & (vTF[1:]==1))
+
+    # we want the point one time point  further though so index +1
+    return t[idx[0]+1]
+
+def spikeRate(t,v, vT=None, doPlot=False):
+    """ finds spike rate
+        if true plots spike times against voltage trace
+
+    Args:
+        t: valTuple output
+        v: valTuple output
+        vT : optional spike time
+
+    Returns:
+        spike rate
+    """
+
+    # if no threshold calculates appropriate one
+    if vT == None:
+        vT = (0.85*(np.max(v)-np.sqrt(np.std(v))))
+    sr = spikeGet(t,v,vT)
+
+    if doPlot:
+        plt.plot(t, v, c='blue', lw=2)
+        for s in sr:
+            plt.plot([s,s],
+            [np.min(v),np.max(v)],
+            c='red'
+            )
+        plt.ylabel('v [mV]')
+        plt.xlabel('t [ms]')
+        plt.suptitle('Voltage Trace and Spike points')
+        plt.legend(('vm', 'spikes'))
+        plt.grid()
+        plt.show()
+
+    # no spike or single spike detection
+    if len(sr)<2:
+        return 0.0
+
+    # find innerspike interval
+    srF =sr[1:]-sr[:-1]
+
+    # convert from ms to Hz
+    f =1000.0/srF.mean()
+
+    return f
+
