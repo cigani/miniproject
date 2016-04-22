@@ -259,10 +259,12 @@ def spikeGet(t,v,vT=None):
     Returns:
         firing rate of neuron
     """
-
+    #simple formula to get a sane vT
     if vT == None:
-        vT = (0.85*(np.max(v)-np.sqrt(np.std(v))))
+        vT = [(0.85*(np.max(v)-np.sqrt(np.std(v)))), 10]
+        vT = np.max(vT)
     vTF = v>vT
+
     # use numpy's index-a-index functionality to extract T/F shift point
     # this gives the point where false becomes true.
     idx = np.nonzero((vTF[:-1]==0) & (vTF[1:]==1))
