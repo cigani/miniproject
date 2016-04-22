@@ -283,9 +283,6 @@ def spikeRate(t,v, vT=None, doPlot=False):
         spike rate
     """
 
-    # if no threshold calculates appropriate one
-    if vT == None:
-        vT = (0.85*(np.max(v)-np.sqrt(np.std(v))))
     sr = spikeGet(t,v,vT)
 
     if doPlot:
