@@ -12,7 +12,7 @@ import hhBasic
 import matplotlib.pyplot as plt
 
 norp=[]
-ved = np.linspace(1e-5,0.5,50)
+ved = np.linspace(1e-5,5,50)
 for i in ved:
     hex = hhBasic.hhStep(itEnd=440, tEnd=440,
     iAmp=0.5,var2=i,doPlot=False, ntype=2)
@@ -26,7 +26,7 @@ vv = ved[vxz-1]
 print 'Iteration 1 of 9 done'
 norp1=[]
 nspike1=[]
-ved1=np.linspace(0.001,1,50)
+ved1=np.linspace(0.001,5,50)
 for i in ved1:
     hex2 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=i)
@@ -40,7 +40,7 @@ vv1 = ved1[vxz-1]
 print 'Iteration 2 of 9 done'
 norp2=[]
 nspike2=[]
-ved2=np.linspace(0.001,1,50)
+ved2=np.linspace(0.001,5,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -56,7 +56,7 @@ print 'Iteration 3 of 9 done'
 norp2=[]
 nspike2=[]
 vv3=[]
-ved2=np.linspace(0.0001,1,50)
+ved2=np.linspace(0.0001,5,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -72,7 +72,7 @@ print 'Iteration 4 of 9 done'
 norp2=[]
 nspike2=[]
 vv4=[]
-ved2=np.linspace(0.0001,1,50)
+ved2=np.linspace(0.0001,5,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -89,7 +89,7 @@ print 'Iteration 5 of 9 done'
 norp2=[]
 nspike2=[]
 vv5=[]
-ved2=np.linspace(0.0001,1,50)
+ved2=np.linspace(0.0001,5,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -108,7 +108,7 @@ print 'Iteration 6 of 9 done'
 norp2=[]
 nspike2=[]
 vv6=[]
-ved2=np.linspace(1,100,55)
+ved2=np.linspace(0.1,100,55)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -129,7 +129,7 @@ print 'Iteration 7 of 9 done'
 norp2=[]
 nspike2=[]
 vv7=[]
-ved2=np.linspace(0.01,40,50)
+ved2=np.linspace(0.01,100,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -154,7 +154,7 @@ print 'Iteration 8 of 9 done'
 norp2=[]
 nspike2=[]
 vv8=[]
-ved2=np.linspace(1,5,300)
+ved2=np.linspace(.05,5,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=840, tEnd=840,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -179,3 +179,5 @@ hex3 = hhBasic.hhStep(itEnd=840, tEnd=840,iAmp=0.5, var2=vv,
     controlPar7=vv7, controlPar8=vv8)
 t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
 nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
+
+#vv =0.2, vv8=2~, vv7=18
