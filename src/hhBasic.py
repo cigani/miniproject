@@ -52,7 +52,9 @@ def plotData(valStat, title=None):
 
 
 
-def hhNeuronA(curr, simtime):
+def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
+            controlPar4,controlPar5,controlPar6, controlPar7,
+            controlPar8):
 
     """Simple Hodgkin-Huxley neuron implemented in Brian2.
 
@@ -70,13 +72,21 @@ def hhNeuronA(curr, simtime):
     El = 10.6 * b2.mV
     EK = -12 * b2.mV
     ENa = 115 * b2.mV
-    EIh = -45 * b2.mV
-    gIh = 20.6 * b2.msiemens
+    EIh = -12 * b2.mV
+    gIh = var2 * b2.msiemens
     gl = 0.3 * b2.msiemens
-    gK = 36 * b2.msiemens
+    gK = 5 * b2.msiemens
     gNa = 1.5*120 * b2.msiemens #*1.5
     C = 1 * b2.ufarad
-
+    tauKmax = 4*1000* b2.ms
+    cPar1 = controlPar1 * b2.mV
+    cPar2 = controlPar2 * b2.mV
+    cPar3 = controlPar3 * b2.mV
+    cPar4 = controlPar4 * b2.mV
+    cPar5 = controlPar5 * b2.mV
+    cPar6 = controlPar6 * b2.mV
+    cPar7 = controlPar7 * b2.mV
+    cPar8 = controlPar8 * b2.mV
     # forming HH model with differential equations
     # TODO: Figure out if Na/K currents are just gNa/k * volts
     eqs = '''
@@ -86,35 +96,41 @@ def hhNeuronA(curr, simtime):
     alphah = .07*exp(-.05*vm/mV)/ms    : Hz
     alpham = .1*(25*mV-vm)/(exp(2.5-.1*vm/mV)-1)/mV/ms : Hz
     alphan = .01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
-    alphap = .00643*(154.9*mV+vm)/(exp((154.9*mV+vm)/(11.9*mV)-1))/mV/ms \
-             : Hz
     betah = 1./(1+exp(3.-.1*vm/mV))/ms : Hz
     betam = 4*exp(-.0556*vm/mV)/ms : Hz
     betan = .125*exp(-.0125*vm/mV)/ms : Hz
-    betap = .193*exp(vm/(33.1*mV))/ms : Hz
     dh/dt = alphah*(1-h)-betah*h : 1
     dm/dt = alpham*(1-m)-betam*m : 1
     dn/dt = alphan*(1-n)-betan*n : 1
-    dp/dt = alphap*(1-p)-betap*p : 1
+    dp/dt = (pinf-p)/tp : 1
     dvm/dt = membrane_Im/C : volt
+    hinf = alphah/(alphah+betah) : 1
+    minf = alpham/(alpham+betam) : 1
+    ninf = alphan/(alphan+betan) : 1
+    pinf = cPar8/mV*1/(1+cPar5/mV*exp(-cPar1/mV*(cPar4/mV*vm/mV+35/10))) : 1
+    th = 1/(alphah+betah) : second
+    tm = 1/(alpham+betam) : second
+    tn = 1/(alphan+betan) : second
+    tp = tauKmax/(3.3*exp(cPar2/mV*(vm/mV+35/20*cPar6/mV) + \
+        exp(cPar3/mV*(-vm/mV+35/20*cPar7/mV)))) : second
     '''
 
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
 
     # parameter initialization #TODO: Find paramter logic
-        # Maybe apply stochastic methods from brian docs:
-        # 'we can do this by using the symbol xi in differential equations'
+    # Maybe apply stochastic methods from brian docs:
+    # 'we can do this by using the symbol xi in differential equations'
     neuron.vm = 0
     neuron.m = 0.0529324852572
     neuron.h = 0.596120753508
     neuron.n = 0.317676914061
-    neuron.p = 0.32321313423
+    #neuron.p = 0.
 
     # tracking parameters
     # TODO: add Na / K currents
     valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
-    'h', 'p'], record=True)
+    'h', 'minf','ninf','hinf','pinf','tm','tn','th'], record=True)
 
     # running the simulation
     b2.run(simtime)
@@ -172,8 +188,8 @@ def hhNeuron(curr, simtime):
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
 
     # parameter initialization #TODO: Find paramter logic
-        # Maybe apply stochastic methods from brian docs:
-        # 'we can do this by using the symbol xi in differential equations'
+    # Maybe apply stochastic methods from brian docs:
+    # 'we can do this by using the symbol xi in differential equations'
     neuron.vm = 0
     neuron.m = 0.0529324852572
     neuron.h = 0.596120753508
@@ -189,8 +205,10 @@ def hhNeuron(curr, simtime):
     return (valStat)
 
 
-def hhStep(itStart=20, itEnd=180, iAmp=7,
-            tEnd=200,dt = 1, doPlot=True, ntype = 1):
+def hhStep(itStart=20, itEnd=180, iAmp=7, tEnd=200,dt = 1, doPlot=True,
+            ntype = 1,var2=.2,controlPar1=1,controlPar2=1,
+            controlPar3=1,controlPar4=1,controlPar5=1,
+            controlPar6=1, controlPar7=1, controlPar8=1):
 
     """Run the Hodgkin-Huley neuron for a step current input.
 
@@ -213,7 +231,9 @@ def hhStep(itStart=20, itEnd=180, iAmp=7,
     if ntype==1:
         valStat = hhNeuron(curr, tEnd * b2.ms)
     else:
-        valStat = hhNeuronA(curr,tEnd* b2.ms)
+        valStat = hhNeuronA(curr,tEnd* b2.ms,var2,controlPar1,controlPar2,
+                  controlPar3,controlPar4,controlPar5,controlPar6,
+                  controlPar7, controlPar8)
     if doPlot:
         plotData(
             valStat,
@@ -292,7 +312,7 @@ def hhRamp(itStart=30, itEnd=270, iAmp=20.,
 
     return valStat
 
-def valTuple(valStat):
+def valTuple(valStat, ntype=1):
     """ Extract our data from numpy arrays into tuple
 
     Args:
@@ -302,20 +322,43 @@ def valTuple(valStat):
         [t, vm, i_e, hinf, ninf, minf, tm, tn, th] unit corrected
         normalizes acti/deacti parameters
     """
-    fulltrace = np.append(valStat.minf[0], [valStat.ninf[0],
+    if ntype ==1:
+        fulltrace = np.append(valStat.minf[0], [valStat.ninf[0],
                 valStat.hinf[0]])
-    nrmfactor = np.max(fulltrace)/b2.mV
-    t = valStat.t / b2.ms
-    v = valStat.vm[0] / b2.mV
-    i_e = valStat.i_e[0] /b2.pA # i is reserved for index, I breaks PEP
-    hinf = valStat.hinf[0]/nrmfactor / b2.mV
-    ninf = valStat.ninf[0]/nrmfactor / b2.mV
-    minf = valStat.minf[0]/nrmfactor / b2.mV
-    tm = valStat.tm[0] / b2.ms
-    tn = valStat.tn[0] / b2.ms
-    th = valStat.th[0] / b2.ms
-
-    return (t,v,i_e,hinf,ninf,minf,tm,tn,th)
+        nrmfactor = np.max(fulltrace)/b2.mV
+        t = valStat.t / b2.ms
+        v = valStat.vm[0] / b2.mV
+        i_e = valStat.i_e[0] /b2.pA
+        hinf = valStat.hinf[0]/nrmfactor / b2.mV
+        ninf = valStat.ninf[0]/nrmfactor / b2.mV
+        minf = valStat.minf[0]/nrmfactor / b2.mV
+        tm = valStat.tm[0] / b2.ms
+        tn = valStat.tn[0] / b2.ms
+        th = valStat.th[0] / b2.ms
+        return (t,v,i_e,hinf,ninf,minf,tm,tn,th)
+    else:
+        fulltrace = np.append(valStat.minf[0], [valStat.ninf[0],
+                valStat.hinf[0]])
+        nrmfactor = np.max(fulltrace)/b2.mV
+        t = valStat.t / b2.ms
+        v = valStat.vm[0] / b2.mV
+        i_e = valStat.i_e[0] /b2.pA
+        hinf = valStat.hinf[0]/nrmfactor / b2.mV
+        ninf = valStat.ninf[0]/nrmfactor / b2.mV
+        minf = valStat.minf[0]/nrmfactor / b2.mV
+        pinf = valStat.pinf[0]/nrmfactor / b2.mV
+        tm = valStat.tm[0] / b2.ms
+        tn = valStat.tn[0] / b2.ms
+        th = valStat.th[0] / b2.ms
+        #tp = valStat.tp[0] / b2.ms
+        ftrce = np.append(valStat.m[0], [valStat.n[0], valStat.h[0],
+                          valStat.pinf[0]])
+        nrmfac = np.max(ftrce)/b2.mV
+        h = valStat.h[0]/nrmfac / b2.mV
+        n = valStat.n[0]/nrmfac / b2.mV
+        m = valStat.m[0]/nrmfac / b2.mV
+        #p = valStat.p[0]/nrmfac / b2.mV
+        return (t,v,i_e,hinf,ninf,minf,pinf,tm,tn,th,h,n,m)
 
 def spikeGet(t,v,vT=None):
     """  Extract spike time using boolean logic. Seperate array at T/F
@@ -331,7 +374,7 @@ def spikeGet(t,v,vT=None):
     """
     #simple formula to get a sane vT
     if vT == None:
-        vT = [(0.85*(np.max(v)-np.sqrt(np.std(v)))), 10]
+        vT = [(0.75*(np.max(v)-np.sqrt(np.std(v)))), 10]
         vT = np.max(vT)
     vTF = v>vT
 
@@ -377,9 +420,9 @@ def spikeRate(t,v, vT=None, doPlot=False):
 
     # find innerspike interval
     srF =sr[1:]-sr[:-1]
-
+    fstd = np.std(srF)
     # convert from ms to Hz
     f =1000.0/srF.mean()
 
-    return f
+    return (f,fstd)
 
