@@ -178,7 +178,7 @@ hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            controlPar8=vv8)
 t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
 nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
-print("vv: %.10f \n vv1: %.10f \n vv2 :%.10f \n \
-    vv3: %.10f \n vv4: %.10f \n vv5: %.10f \n vv6: \
-    %.10f \n vv7: %.10f \n vv8: %.10f") % (vv, vv1, \
+print("vv: %.10f \n vv1: %.10f \n vv2 :%.10f\n\
+vv3: %.10f\nvv4: %.10f\nvv5: %.10f\nvv6: \
+%.10f\n vv7: %.10f\n vv8: %.10f") % (vv, vv1, \
     vv2, vv3, vv4, vv5, vv6, vv7, vv8)
