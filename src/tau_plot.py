@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-hex = hhBasic.hhStep(doPlot=False)
+hex = hhBasic.hhStep(doPlot=False,ntype=1)
 
 plt.subplot(411)
 plt.plot(hex.vm[0]/b2.mV, hex.tn[0]/b2.ms, 'blue', lw=2)
