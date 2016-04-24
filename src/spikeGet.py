@@ -6,6 +6,17 @@
     Warning: Takes a very long time
 """
 
+   #TODO: Turn the entire thing into a single function. The for loops are
+   #     all repeats of each other. create a dictionary with appropriate
+   #     variables names and linspaces to search for parameters.
+   #TODO: Might also be interesting to set it to checks a variable using
+   #     rng so that the order of parameters is randomized. might also want
+   #     to look into making it run through the optimiatization again after
+   #     finding a set of parameters to make sure were good.
+   #TODO: Finally sometimes when optimizing it drops us down to a single
+   #     spike. neeed to write a algorithim to shuffle indexes a bit when
+   #     single/double spikes are detected.
+
 import brian2 as b2
 import numpy as np
 import hhBasic
@@ -40,7 +51,7 @@ vv1 = ved1[vxz]
 print 'Iteration 2 of 9 done'
 norp2=[]
 nspike2=[]
-ved2=np.linspace(0.001,5,50)
+ved2=np.linspace(1e-7,1,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -56,7 +67,7 @@ print 'Iteration 3 of 9 done'
 norp2=[]
 nspike2=[]
 vv3=[]
-ved2=np.linspace(0.0001,5,50)
+ved2=np.linspace(1e-7,1,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -72,7 +83,7 @@ print 'Iteration 4 of 9 done'
 norp2=[]
 nspike2=[]
 vv4=[]
-ved2=np.linspace(0.0001,5,50)
+ved2=np.linspace(0.001,5,50)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -102,13 +113,11 @@ for i in ved2:
     norp2.append(nspike2[1])
 vxz = norp2.index(np.max(norp2))
 vv5 = ved2[vxz]
-print 'vv5'
-print vv5
 print 'Iteration 6 of 9 done'
 norp2=[]
 nspike2=[]
 vv6=[]
-ved2=np.linspace(0.1,100,55)
+ved2=np.linspace(0.1,300,100)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -120,17 +129,13 @@ for i in ved2:
     if nspike2==0:
         break
     norp2.append(nspike2[1])
-print norp2
 vxz = norp2.index(np.max(norp2))
 vv6 = ved2[vxz]
-print 'vv6'
-print vv6
 print 'Iteration 7 of 9 done'
-
 norp2=[]
 nspike2=[]
 vv7=[]
-ved2=np.linspace(0.01,100,50)
+ved2=np.linspace(0.01,300,100)
 for i in ved2:
     hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
@@ -139,18 +144,11 @@ for i in ved2:
            controlPar6=vv6, controlPar7=i)
     t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
     nspike2= hhBasic.spikeRate(t3,v3,doPlot=False)
-    print 'nspike2'
-    print nspike2
-    print 'norp2'
-    print norp2
     if nspike2==0:
         break
     norp2.append(nspike2[1])
-print norp2
 vxz = norp2.index(np.max(norp2))
 vv7 = ved2[vxz]
-print 'vv7'
-print vv7
 print 'Iteration 8 of 9 done'
 norp2=[]
 nspike2=[]
@@ -170,8 +168,6 @@ for i in ved2:
     norp2.append(nspike2[1])
 vxz = norp2.index(np.max(norp2))
 vv8 = ved2[vxz]
-print 'vv8'
-print vv8
 print 'Iteration 9 of 9 done'
 
 hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
@@ -182,5 +178,7 @@ hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
            controlPar8=vv8)
 t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
 nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
-
-#vv =0.2, vv8=2~, vv7=18
+print("vv: %.10f \n vv1: %.10f \n vv2 :%.10f \n \
+    vv3: %.10f \n vv4: %.10f \n vv5: %.10f \n vv6: \
+    %.10f \n vv7: %.10f \n vv8: %.10f") % (vv, vv1, \
+    vv2, vv3, vv4, vv5, vv6, vv7, vv8)

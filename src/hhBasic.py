@@ -118,8 +118,9 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
 
-    # parameter initialization #TODO: Find paramter logic
-    # Maybe apply stochastic methods from brian docs:
+    # parameter initialization
+    #TODO: Find paramter logic. Maybe apply stochastic methods
+    # from brian docs:
     # 'we can do this by using the symbol xi in differential equations'
     neuron.vm = 0
     neuron.m = 0.0529324852572
