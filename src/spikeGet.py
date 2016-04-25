@@ -35,6 +35,14 @@ for i in ved:
 vxz = norp.index(np.max(norp))
 vv = ved[vxz]
 print 'Iteration 1 of 9 done'
+print 'pinf: '
+print hex.pinf
+print 'ninf: '
+print hex.ninf
+print 'minf: '
+print hex.minf
+print 'hinf: '
+print hex.hinf
 norp1=[]
 nspike1=[]
 ved1=np.linspace(0.001,5,50)
@@ -155,7 +163,7 @@ nspike2=[]
 vv8=[]
 ved2=np.linspace(.05,5,50)
 for i in ved2:
-    hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+    hex3 = hhBasic.hhStep(itEnd=1000, tEnd=1000,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
            controlPar2=vv2,controlPar3=vv3,
            controlPar4=vv4,controlPar5=vv5,
@@ -170,7 +178,7 @@ vxz = norp2.index(np.max(norp2))
 vv8 = ved2[vxz]
 print 'Iteration 9 of 9 done'
 
-hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+hex3 = hhBasic.hhStep(itEnd=2500, tEnd=2700,iAmp=0.5, var2=vv,
            doPlot=False, ntype=2,controlPar1=vv1,
            controlPar2=vv2,controlPar3=vv3,
            controlPar4=vv4,controlPar5=vv5,
@@ -182,3 +190,15 @@ print("vv: %.10f \n vv1: %.10f \n vv2 :%.10f\n\
 vv3: %.10f\nvv4: %.10f\nvv5: %.10f\nvv6: \
 %.10f\n vv7: %.10f\n vv8: %.10f") % (vv, vv1, \
     vv2, vv3, vv4, vv5, vv6, vv7, vv8)
+print  hex.pinf
+
+""" optimized [vv: 0.2040912245
+ vv1: 1.8373673469
+  vv2 :0.0204082612
+  vv3: 0.0000001000
+  vv4: 0.0010000000
+  vv5: 1.3266040816
+  vv6: 18.2757575758
+   vv7: 0.0100000000
+    vv8: 1.8683673469
+"""
