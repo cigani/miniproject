@@ -24,9 +24,9 @@ def plotData(valStat, title=None):
 
     plt.subplot(312)
 
-    plt.plot(valStat.t/b2.ms, valStat.m[0] / nrmfactor / b2.mV,'black',lw=2)
-    plt.plot(valStat.t/b2.ms, valStat.n[0] / nrmfactor / b2.mV,'blue',lw=2)
-    plt.plot(valStat.t/b2.ms, valStat.h[0] / nrmfactor / b2.mV, 'red', lw=2)
+    plt.plot(valStat.t/b2.ms,valStat.m[0] / nrmfactor / b2.mV,'black',lw=2)
+    plt.plot(valStat.t/b2.ms,valStat.n[0] / nrmfactor / b2.mV,'blue',lw=2)
+    plt.plot(valStat.t/b2.ms,valStat.h[0] / nrmfactor / b2.mV, 'red', lw=2)
     plt.xlabel('t (ms)')
     plt.ylabel('act./inact.')
     plt.legend(('m', 'n', 'h'))
@@ -107,7 +107,7 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     hinf = alphah/(alphah+betah) : 1
     minf = alpham/(alpham+betam) : 1
     ninf = alphan/(alphan+betan) : 1
-    pinf = cPar8/mV*1/(1+cPar5/mV*exp(-cPar1/mV*(cPar4/mV*vm/mV+35/10))) : 1
+    pinf = cPar8/mV*1/(1+cPar5/mV*exp(-cPar1/mV*(cPar4/mV*vm/mV+35/10))) :1
     th = 1/(alphah+betah) : second
     tm = 1/(alpham+betam) : second
     tn = 1/(alphan+betan) : second
@@ -126,7 +126,7 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     neuron.m = 0.0529324852572
     neuron.h = 0.596120753508
     neuron.n = 0.317676914061
-    #neuron.p = 0.
+    #neuron.p = 0.0 #settign this to pinf stops neuts the adaption
 
     # tracking parameters
     # TODO: add Na / K currents
