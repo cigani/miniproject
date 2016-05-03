@@ -22,12 +22,13 @@ import numpy as np
 import hhBasic
 import matplotlib.pyplot as plt
 import seaborn
+Amp = 7
 def spikeOptimize():
     norp=[]
     ved = np.linspace(1e-5,5,50)
     for i in ved:
         hex = hhBasic.hhStep(itEnd=440, tEnd=440,
-        iAmp=0.5,var2=i,doPlot=False, ntype=2)
+        iAmp=Amp,var2=i,doPlot=False, ntype=2)
         t,v, = hhBasic.valTuple(hex, ntype=2)[0:2]
         nspike = hhBasic.spikeRate(t,v, doPlot=False)
         if nspike == 0:
@@ -48,7 +49,7 @@ def spikeOptimize():
     nspike1=[]
     ved1=np.linspace(0.001,5,50)
     for i in ved1:
-        hex2 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex2 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=i)
         t2,v2 = hhBasic.valTuple(hex2,ntype=2)[0:2]
         nspike1= hhBasic.spikeRate(t2,v2,doPlot=False)
@@ -62,7 +63,7 @@ def spikeOptimize():
     nspike2=[]
     ved2=np.linspace(1e-7,1,50)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=i)
         t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
@@ -78,7 +79,7 @@ def spikeOptimize():
     vv3=[]
     ved2=np.linspace(1e-7,1,50)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=i)
         t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
@@ -94,7 +95,7 @@ def spikeOptimize():
     vv4=[]
     ved2=np.linspace(0.001,5,50)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=i)
@@ -111,7 +112,7 @@ def spikeOptimize():
     vv5=[]
     ved2=np.linspace(0.0001,5,50)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=vv4,controlPar5=i)
@@ -128,7 +129,7 @@ def spikeOptimize():
     vv6=[]
     ved2=np.linspace(0.1,300,100)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=vv4,controlPar5=vv5,
@@ -146,7 +147,7 @@ def spikeOptimize():
     vv7=[]
     ved2=np.linspace(0.01,300,100)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=440, tEnd=440,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=vv4,controlPar5=vv5,
@@ -164,7 +165,7 @@ def spikeOptimize():
     vv8=[]
     ved2=np.linspace(.05,5,50)
     for i in ved2:
-        hex3 = hhBasic.hhStep(itEnd=1000, tEnd=1000,iAmp=0.5, var2=vv,
+        hex3 = hhBasic.hhStep(itEnd=1000, tEnd=1000,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=vv4,controlPar5=vv5,
@@ -179,7 +180,7 @@ def spikeOptimize():
     vv8 = ved2[vxz]
     print 'Iteration 9 of 9 done'
 
-    hex3 = hhBasic.hhStep(itEnd=1000, tEnd=1000,iAmp=0.5, var2=vv,
+    hex3 = hhBasic.hhStep(itEnd=1000, tEnd=1000,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=vv4,controlPar5=vv5,
@@ -192,6 +193,35 @@ def spikeOptimize():
     %.10f\n vv7: %.10f\n vv8: %.10f") % (vv, vv1, \
         vv2, vv3, vv4, vv5, vv6, vv7, vv8)
     print  hex.pinf
+    hex3 = hhBasic.hhStep(itStart=300,itEnd=1000, tEnd=1000,iAmp=Amp, var2=vv,
+               doPlot=False, ntype=2,controlPar1=vv1,
+               controlPar2=vv2,controlPar3=vv3,
+               controlPar4=vv4,controlPar5=vv5,
+               controlPar6=vv6, controlPar7=vv7,
+               controlPar8=vv8)
+    t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
+    nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
+
+    hex3 = hhBasic.hhStep(itStart=1000,itEnd=1000, tEnd=1000,iAmp=0.0,
+               var2=vv,
+               doPlot=False, ntype=2,controlPar1=vv1,
+               controlPar2=vv2,controlPar3=vv3,
+               controlPar4=vv4,controlPar5=vv5,
+               controlPar6=vv6, controlPar7=vv7,
+               controlPar8=vv8)
+    t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
+    nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
+    plt.subplot(414)
+
+    plt.plot(hex.t/b2.ms, hex.sod[0]/b2.uamp/1000,lw=2,label='Na')
+    plt.plot(hex.t/b2.ms, hex.pot[0]/b2.uamp/1000,lw=2,label='K')
+    plt.plot(hex.t/b2.ms, hex.slowPot[0]/b2.uamp/1000,lw=2,label='SlowK')
+    plt.xlabel('t [ms]')
+    plt.ylabel('I [uA]')
+    plt.axis((15,35,
+    min(hex.pot[0]/b2.uamp/1000)*1.3,
+    max(hex.sod[0]/b2.uamp/1000)*1.3))
+    plt.show()
     return (vv,vv1,vv2,vv3,vv4,vv5,vv6,vv7,vv8)
 """ optimized [vv: 0.2040912245
  vv1: 1.8373673469

@@ -1,5 +1,6 @@
 """ Calculate the spike rate against fixed input currents """
 
+
 import numpy as np
 import brian2 as b2
 import hhBasic as hh
@@ -49,3 +50,4 @@ plt.xlabel('Current [uA]')
 plt.suptitle('F-I curve')
 plt.axis((0.5,4, min(nspike), max(nspike)))
 plt.show()
+

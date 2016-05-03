@@ -87,8 +87,8 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     cPar6 = controlPar6 * b2.mV
     cPar7 = controlPar7 * b2.mV
     cPar8 = controlPar8 * b2.mV
+
     # forming HH model with differential equations
-    # TODO: Figure out if Na/K currents are just gNa/k * volts
     eqs = '''
     i_e = curr(t) : amp
     membrane_Im = i_e + gNa*m**3*h*(ENa-vm) + \
@@ -113,25 +113,24 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     tn = 1/(alphan+betan) : second
     tp = tauKmax/(3.3*exp(cPar2/mV*(vm/mV+35/20*cPar6/mV) + \
         exp(cPar3/mV*(-vm/mV+35/20*cPar7/mV)))) : second
+    sod = gNa*m**3*h*(ENa-vm) : amp
+    pot = gK*n**4*(EK-vm) : amp
+    slowPot = gIh*p*(EIh-vm) : amp
     '''
 
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
 
     # parameter initialization
-    #TODO: Find paramter logic. Maybe apply stochastic methods
-    # from brian docs:
-    # 'we can do this by using the symbol xi in differential equations'
+
     neuron.vm = 0
     neuron.m = 0.0529324852572
     neuron.h = 0.596120753508
     neuron.n = 0.317676914061
-    #neuron.p = 0.0 #settign this to pinf stops neuts the adaption
 
     # tracking parameters
-    # TODO: add Na / K currents
     valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
-    'h', 'minf','ninf','hinf','pinf','tm','tn','th'], record=True)
+    'h', 'minf','ninf','hinf','pinf','tm','tn','th','sod','pot','slowPot'], record=True)
 
     # running the simulation
     b2.run(simtime)
@@ -161,7 +160,6 @@ def hhNeuron(curr, simtime):
     C = 1 * b2.ufarad
 
     # forming HH model with differential equations
-    # TODO: Figure out if Na/K currents are just gNa/k * volts
     eqs = '''
     i_e = curr(t) : amp
     membrane_Im = i_e + gNa*m**3*h*(ENa-vm) + \
@@ -184,26 +182,97 @@ def hhNeuron(curr, simtime):
     th = 1/(alphah+betah) : second
     tm = 1/(alpham+betam) : second
     tn = 1/(alphan+betan) : second
+    sod = gNa*m**3*h*(ENa-vm) : amp
+    pot = gK*n**4*(EK-vm) : amp
     '''
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
-
-    # parameter initialization #TODO: Find paramter logic
-    # Maybe apply stochastic methods from brian docs:
-    # 'we can do this by using the symbol xi in differential equations'
     neuron.vm = 0
     neuron.m = 0.0529324852572
     neuron.h = 0.596120753508
     neuron.n = 0.317676914061
 
     # tracking parameters
-    # TODO: add Na / K currents
     valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
-    'h', 'hinf','minf','ninf', 'tm','th','tn'], record=True)
+    'h', 'hinf','minf','ninf', 'tm','th','tn','sod', 'pot'], record=True)
 
     # running the simulation
     b2.run(simtime)
     return (valStat)
+
+
+def hhNeuron3(curr, simtime):
+
+    """Simple Hodgkin-Huxley neuron implemented in Brian2.
+
+    Args:
+        curr (TimedArray): Input current injected into the HH neuron
+        simtime (float): Simulation time [seconds]
+
+    Returns:
+        StateMonitor: Brian2 StateMonitor with valStat fields
+        [vm', 'i_e', 'm', 'n','h', 'hinf','minf','ninf', 'tm',
+        'th','tn']
+    """
+
+    # neuron parameters from project file
+    El = 10.6 * b2.mV
+    EK = -12 * b2.mV
+    ENa = 115 * b2.mV
+    EKs = -12 * b2.mV
+    gl = 0.3 * b2.msiemens
+    gK = 36 * b2.msiemens
+    gNa = 1.5*120 * b2.msiemens #*1.5
+    gKs = 3.6 * b2.msiemens
+    C = 1 * b2.ufarad
+
+
+    # forming HH model with differential equations
+    eqs = '''
+    i_e = curr(t) : amp
+    membrane_Im = i_e + gNa*m**3*h*(ENa-vm) + \
+        gl*(El-vm) + gKs*p**2*h*(EKs-vm) + gK*n**4*(EK-vm) : amp
+    alphah = .07*exp(-.05*vm/mV)/ms    : Hz
+    alpham = .1*(25*mV-vm)/(exp(2.5-.1*vm/mV)-1)/mV/ms : Hz
+    alphan = .01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
+    alphap = .2*.01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
+    betah = 1./(1+exp(3.-.1*vm/mV))/ms : Hz
+    betam = 4*exp(-.0556*vm/mV)/ms : Hz
+    betan = .125*exp(-.0125*vm/mV)/ms : Hz
+    betap = .15*.125*exp(-.0125*vm/mV)/ms : Hz
+    dh/dt = alphah*(1-h)-betah*h : 1
+    dm/dt = alpham*(1-m)-betam*m : 1
+    dn/dt = alphan*(1-n)-betan*n : 1
+    dp/dt = alphap*(1-p)-betap*p : 1
+    dvm/dt = membrane_Im/C : volt
+    NaI = gNa*m**3*h*(ENa-vm) : amp
+    KI = gK*n**4*(EK-vm) : amp
+    KIslow = gKs*p*(EKs-vm) : amp
+    hinf = alphah/(alphah+betah) : 1
+    minf = alpham/(alpham+betam) : 1
+    ninf = alphan/(alphan+betan) : 1
+    pinf = alphap/(alphap+betap) : 1
+    th = 1/(alphah+betah) : second
+    tm = 1/(alpham+betam) : second
+    tn = 1/(alphan+betan) : second
+    tp = 1/(alphap+betap) : second
+    '''
+    #set betap coef to .15 for bursting behavior
+    neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
+    neuron.vm = 0
+    neuron.m = 0.0529324852572
+    neuron.h = 0.596120753508
+    neuron.n = 0.317676914061
+    neuron.p = 0.317
+    # tracking parameters
+    valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm','p', 'n',
+    'h','NaI','KI','KIslow', 'th','tp','tn','tm','pinf',
+                            'minf','ninf','hinf'],record=True)
+
+    # running the simulation
+    b2.run(simtime)
+    return (valStat)
+
 
 
 def hhStep(itStart=20, itEnd=180, iAmp=7, tEnd=200,dt = 1, doPlot=True,
@@ -231,6 +300,8 @@ def hhStep(itStart=20, itEnd=180, iAmp=7, tEnd=200,dt = 1, doPlot=True,
     curr = b2.TimedArray(tmp, dt=dt*b2.ms)
     if ntype==1:
         valStat = hhNeuron(curr, tEnd * b2.ms)
+    if ntype==3:
+        valStat = hhNeuron3(curr,tEnd * b2.ms)
     else:
         valStat = hhNeuronA(curr,tEnd* b2.ms,var2,controlPar1,controlPar2,
                   controlPar3,controlPar4,controlPar5,controlPar6,
