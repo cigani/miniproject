@@ -22,7 +22,7 @@ import numpy as np
 import hhBasic
 import matplotlib.pyplot as plt
 import seaborn
-Amp = 7
+Amp = 0.5
 def spikeOptimize():
     norp=[]
     ved = np.linspace(1e-5,5,50)
@@ -213,14 +213,14 @@ def spikeOptimize():
     nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
     plt.subplot(414)
 
-    plt.plot(hex.t/b2.ms, hex.sod[0]/b2.uamp/1000,lw=2,label='Na')
-    plt.plot(hex.t/b2.ms, hex.pot[0]/b2.uamp/1000,lw=2,label='K')
-    plt.plot(hex.t/b2.ms, hex.slowPot[0]/b2.uamp/1000,lw=2,label='SlowK')
+    plt.plot(hex.t/b2.ms, hex.NaI[0]/b2.uamp/1000,lw=2,label='Na')
+    plt.plot(hex.t/b2.ms, hex.KI[0]/b2.uamp/1000,lw=2,label='K')
+    plt.plot(hex.t/b2.ms, hex.KIslow[0]/b2.uamp/1000,lw=2,label='SlowK')
     plt.xlabel('t [ms]')
     plt.ylabel('I [uA]')
     plt.axis((15,35,
-    min(hex.pot[0]/b2.uamp/1000)*1.3,
-    max(hex.sod[0]/b2.uamp/1000)*1.3))
+    min(hex.KI[0]/b2.uamp/1000)*1.3,
+    max(hex.NaI[0]/b2.uamp/1000)*1.3))
     plt.show()
     return (vv,vv1,vv2,vv3,vv4,vv5,vv6,vv7,vv8)
 """ optimized [vv: 0.2040912245

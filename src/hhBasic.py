@@ -113,9 +113,9 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     tn = 1/(alphan+betan) : second
     tp = tauKmax/(3.3*exp(cPar2/mV*(vm/mV+35/20*cPar6/mV) + \
         exp(cPar3/mV*(-vm/mV+35/20*cPar7/mV)))) : second
-    sod = gNa*m**3*h*(ENa-vm) : amp
-    pot = gK*n**4*(EK-vm) : amp
-    slowPot = gIh*p*(EIh-vm) : amp
+    NaI = gNa*m**3*h*(ENa-vm) : amp
+    KI = gK*n**4*(EK-vm) : amp
+    KIslow = gIh*p*(EIh-vm) : amp
     '''
 
 
@@ -129,8 +129,11 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     neuron.n = 0.317676914061
 
     # tracking parameters
-    valStat = b2.StateMonitor(neuron, ['vm', 'i_e', 'm', 'n',
-    'h', 'minf','ninf','hinf','pinf','tm','tn','th','sod','pot','slowPot'], record=True)
+    valStat = b2.StateMonitor(neuron,
+                              ['vm', 'i_e', 'm', 'n',
+                               'h', 'minf','ninf','hinf','pinf',
+                               'tm','tn','th','NaI','KI','KIslow',
+                               'tp'], record=True)
 
     # running the simulation
     b2.run(simtime)
@@ -223,7 +226,7 @@ def hhNeuron3(curr, simtime):
     gl = 0.3 * b2.msiemens
     gK = 36 * b2.msiemens
     gNa = 1.5*120 * b2.msiemens #*1.5
-    gKs = 3.6 * b2.msiemens
+    gKs = .36 * b2.msiemens
     C = 1 * b2.ufarad
 
 
@@ -235,7 +238,7 @@ def hhNeuron3(curr, simtime):
     alphah = .07*exp(-.05*vm/mV)/ms    : Hz
     alpham = .1*(25*mV-vm)/(exp(2.5-.1*vm/mV)-1)/mV/ms : Hz
     alphan = .01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
-    alphap = .2*.01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
+    alphap = .03*.01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
     betah = 1./(1+exp(3.-.1*vm/mV))/ms : Hz
     betam = 4*exp(-.0556*vm/mV)/ms : Hz
     betan = .125*exp(-.0125*vm/mV)/ms : Hz
@@ -488,7 +491,7 @@ def spikeRate(t,v, vT=None, doPlot=False):
 
     # no spike or single spike detection
     if len(sr)<2:
-        return 0.0
+        return (0.0,0.0) # a good reason
 
     # find innerspike interval
     srF =sr[1:]-sr[:-1]

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import brian2 as b2
 
-hex = hhBasic.hhStep(iAmp=10,ntype=3,itStart=20, itEnd=200, tEnd=250, doPlot=False)
+hex = hhBasic.hhStep(iAmp=3,ntype=3,itStart=20, itEnd=200, tEnd=250, doPlot=False)
 
 traceall = np.append(hex.minf[0], [hex.ninf[0], hex.hinf[0]])
 nrmfactor = np.max(traceall)/b2.mV
