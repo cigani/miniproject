@@ -24,11 +24,11 @@ paraName = [
     'contorlPar7',
     'contorlPar8'
     ]
-d={}
+paraDict={}
 for x in range(len(paraSpace)):
-        d[paraName[x]]=paraSpace[x]
-print
-print d[paraName[0]]
+        paraDict[paraName[x]]=paraSpace[x]
+print paraDict['var2']
+
 """
 paraVal = {}
 spikeVal=[]

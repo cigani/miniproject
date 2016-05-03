@@ -2,7 +2,7 @@ import brian2 as b2
 import hhBasic
 import numpy as np
 import matplotlib.pyplot as plt
-
+import seaborn
 
 hex = hhBasic.hhStep(doPlot=False,ntype=1)
 

@@ -5,7 +5,7 @@ import brian2 as b2
 import hhBasic as hh
 import matplotlib.pyplot as plt
 import spikeGet
-
+import seaborn
 
 def modCount(values, x):
     return {i for i in values if i % x ==0}
@@ -29,7 +29,7 @@ for i in curr:
         print 'true'
         n=n+1
         plt.subplot(sPlts,1,n)
-        plt.plot(t, v, label=str(i))
+        plt.plot(t, v, label=str(i)+' uA')
         for s in hh.spikeGet(t,v):
              plt.plot([s,s],[np.min(v),np.max(v)],
              c ='red')
@@ -37,6 +37,7 @@ for i in curr:
         plt.xlabel('ms')
         plt.legend(loc='upper right')
         plt.yticks(np.arange(min(v), max(v)+1, 50.0))
+plt.suptitle('Spike Rate with increasing input current')
 plt.show()
 print 'length curr: '
 print curr
@@ -46,4 +47,5 @@ plt.plot(curr, nspike, c='black',lw=2)
 plt.ylabel('Spikecount [1/s]')
 plt.xlabel('Current [uA]')
 plt.suptitle('F-I curve')
+plt.axis((0.5,4, min(nspike), max(nspike)))
 plt.show()

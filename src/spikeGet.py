@@ -21,6 +21,7 @@ import brian2 as b2
 import numpy as np
 import hhBasic
 import matplotlib.pyplot as plt
+import seaborn
 def spikeOptimize():
     norp=[]
     ved = np.linspace(1e-5,5,50)
@@ -178,7 +179,7 @@ def spikeOptimize():
     vv8 = ved2[vxz]
     print 'Iteration 9 of 9 done'
 
-    hex3 = hhBasic.hhStep(itEnd=2500, tEnd=2700,iAmp=0.5, var2=vv,
+    hex3 = hhBasic.hhStep(itEnd=1000, tEnd=1000,iAmp=0.5, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
                controlPar4=vv4,controlPar5=vv5,

@@ -1,4 +1,4 @@
-import sys
+import seaborn
 import brian2 as b2
 import matplotlib.pyplot as plt
 import numpy as np
