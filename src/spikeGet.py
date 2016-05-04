@@ -22,7 +22,7 @@ import numpy as np
 import hhBasic
 import matplotlib.pyplot as plt
 import seaborn
-Amp = 0.5
+Amp = 5
 def spikeOptimize():
     norp=[]
     ved = np.linspace(1e-5,5,50)
@@ -193,6 +193,13 @@ def spikeOptimize():
     %.10f\n vv7: %.10f\n vv8: %.10f") % (vv, vv1, \
         vv2, vv3, vv4, vv5, vv6, vv7, vv8)
     print  hex.pinf
+    plt.plot(hex.t/b2.ms, hex.NaI[0]/b2.uamp/1000,lw=2,label='Na')
+    plt.plot(hex.t/b2.ms, hex.KI[0]/b2.uamp/1000,lw=2,label='K')
+    plt.plot(hex.t/b2.ms, hex.KIslow[0]/b2.uamp/1000,lw=2,label='SlowK')
+    plt.xlabel('t [ms]')
+    plt.ylabel('I [uA]')
+    plt.legend(loc='upper right')
+    plt.show()
     hex3 = hhBasic.hhStep(itStart=300,itEnd=1000, tEnd=1000,iAmp=Amp, var2=vv,
                doPlot=False, ntype=2,controlPar1=vv1,
                controlPar2=vv2,controlPar3=vv3,
@@ -211,16 +218,13 @@ def spikeOptimize():
                controlPar8=vv8)
     t3,v3 = hhBasic.valTuple(hex3,ntype=2)[0:2]
     nspike2= hhBasic.spikeRate(t3,v3,doPlot=True)
-    plt.subplot(414)
 
     plt.plot(hex.t/b2.ms, hex.NaI[0]/b2.uamp/1000,lw=2,label='Na')
     plt.plot(hex.t/b2.ms, hex.KI[0]/b2.uamp/1000,lw=2,label='K')
     plt.plot(hex.t/b2.ms, hex.KIslow[0]/b2.uamp/1000,lw=2,label='SlowK')
     plt.xlabel('t [ms]')
     plt.ylabel('I [uA]')
-    plt.axis((15,35,
-    min(hex.KI[0]/b2.uamp/1000)*1.3,
-    max(hex.NaI[0]/b2.uamp/1000)*1.3))
+    plt.legend(loc='upper right')
     plt.show()
     return (vv,vv1,vv2,vv3,vv4,vv5,vv6,vv7,vv8)
 """ optimized [vv: 0.2040912245
@@ -232,4 +236,14 @@ def spikeOptimize():
   vv6: 18.2757575758
    vv7: 0.0100000000
     vv8: 1.8683673469
+    vv: 0.0000100000 
+     vv1: 0.0010000000 
+      vv2 :0.0000001000
+          vv3: 0.0000001000
+          vv4: 0.0010000000
+          vv5: 0.0001000000
+          vv6:     0.1000000000
+           vv7: 0.0100000000
+            vv8: 0.0500000000
+
 """

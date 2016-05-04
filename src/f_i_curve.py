@@ -11,7 +11,7 @@ import seaborn
 def modCount(values, x):
     return {i for i in values if i % x ==0}
 vv,vv1,vv2,vv3,vv4,vv5,vv6,vv7,vv8 = spikeGet.spikeOptimize()
-curr = np.arange(0.01,4,0.01)
+curr = np.arange(0.0,10,0.5)
 n=0
 nspike=[]
 sPlts = len(modCount(curr,1))
@@ -48,6 +48,6 @@ plt.plot(curr, nspike, c='black',lw=2)
 plt.ylabel('Spikecount [1/s]')
 plt.xlabel('Current [uA]')
 plt.suptitle('F-I curve')
-plt.axis((0.5,4, min(nspike), max(nspike)))
+plt.axis((0.0,12, min(nspike), max(nspike)))
 plt.show()
 

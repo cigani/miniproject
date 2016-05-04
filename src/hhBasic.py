@@ -69,16 +69,16 @@ def hhNeuronA(curr, simtime, var2,controlPar1,controlPar2,controlPar3,
     """
 
     # neuron parameters from project file
-    El = 10.6 * b2.mV
+    El = -10.6 * b2.mV
     EK = -12 * b2.mV
     ENa = 115 * b2.mV
-    EIh = -12 * b2.mV
+    EIh = -22 * b2.mV
     gIh = var2 * b2.msiemens
     gl = 0.3 * b2.msiemens
     gK = 5 * b2.msiemens
     gNa = 1.5*120 * b2.msiemens #*1.5
     C = 1 * b2.ufarad
-    tauKmax = 4*1000* b2.ms
+    tauKmax = 10*1000* b2.ms
     cPar1 = controlPar1 * b2.mV
     cPar2 = controlPar2 * b2.mV
     cPar3 = controlPar3 * b2.mV
@@ -278,7 +278,7 @@ def hhNeuron3(curr, simtime):
 
 
 
-def hhStep(itStart=20, itEnd=180, iAmp=7, tEnd=200,dt = 1, doPlot=True,
+def hhStep(itStart=0, itEnd=180, iAmp=7, tEnd=200,dt = 1, doPlot=True,
             ntype = 1,var2=.2,controlPar1=1,controlPar2=1,
             controlPar3=1,controlPar4=1,controlPar5=1,
             controlPar6=1, controlPar7=1, controlPar8=1):
