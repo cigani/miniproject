@@ -6,6 +6,9 @@ current, inducing spike-frequency adaptation.
 Differential equation for the M-type current channel used
 in order to avoid long optimization of the parameters.
 
+Rewrote plotting scripts to be compatible with the code in
+the bmnn directory.
+
 TODO: Burst Current Simulation
       Gaussian White Noise Simulation
 
