@@ -1,7 +1,7 @@
 """
 Hodgkin-Huxley (HH) model with Spike-Frequency Adaptaion (SFA)
 
-Adaptation induced by an additional M-type current, i.e.  a slow voltage-dependent potassium current
+HH model with afterhyperpolarization adaptation
 
 Specify the type of input current to the system with the following:
 Step Current       | HH_Step()
@@ -37,11 +37,10 @@ def plot_data(rec, title=None):
     plt.plot(rec.t/b2.ms, rec.m[0] / nrmfactor / b2.mV, 'black', lw=2)
     plt.plot(rec.t/b2.ms, rec.n[0] / nrmfactor / b2.mV, 'blue', lw=2)
     plt.plot(rec.t/b2.ms, rec.h[0] / nrmfactor / b2.mV, 'red', lw=2)
-    plt.plot(rec.t/b2.ms, rec.w[0] / nrmfactor / b2.mV, 'green', lw=2)
+#    plt.plot(rec.t/b2.ms, rec.w[0] / nrmfactor / b2.mV, 'green', lw=2)
     plt.xlabel('t (ms)')
     plt.ylabel('act./inact.')
-    plt.legend(('m', 'n', 'h', 'w'))
-
+    plt.legend(('m', 'n', 'h')) 
     plt.grid()
 
     plt.subplot(313)
@@ -83,13 +82,13 @@ def HH_Neuron(curr, simtime):
     gK = 36 * b2.msiemens
     gNa = 1.5*120 * b2.msiemens
     C = 1 * b2.ufarad
-    EM = -4 * b2.mV
-    gM = 1.15 * b2.msiemens
+    EA = -1 * b2.mV
+    gA = 1 * b2.msiemens
 
     # forming HH model with SFA with differential equations
     eqs = '''
     I_e = curr(t) : amp
-    membrane_Im = I_e + gNa*m**3*h*(ENa-vm) + gl*(El-vm) + gK*n**4*(EK-vm) + gM*w*(EM-vm) : amp
+    membrane_Im = I_e + gNa*m**3*h*(ENa-vm) + gl*(El-vm) + gK*n**4*(EK-vm) + gA*ca*(EK-vm)/(ca+1) - ica : amp
     alphah = .07*exp(-.05*vm/mV)/ms    : Hz
     alpham = .1*(25*mV-vm)/(exp(2.5-.1*vm/mV)-1)/mV/ms : Hz
     alphan = .01*(10*mV-vm)/(exp(1-.1*vm/mV)-1)/mV/ms : Hz
@@ -100,10 +99,9 @@ def HH_Neuron(curr, simtime):
     dm/dt = alpham*(1-m)-betam*m : 1
     dn/dt = alphan*(1-n)-betan*n : 1
     dvm/dt = membrane_Im/C : volt
-    wi = 1/(1+exp(-3.5-.1*vm/mV)) : 1
-    tauw = 1000*ms : second
-    tw = (11.4*tauw)/(3.3*exp(1.75+0.05*vm/mV)+exp(-1.75-0.05*vm/mV)) : second
-    dw/dt = (wi-w)/tw : 1
+    mi = 1/(1+exp(-10-0.4*vm/mV)) : 1
+    ica = gA*mi*(vm-EA) : amp
+    dca/dt = (-0.002*ica/amp - ca/80)/ms : 1
     '''
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
@@ -115,7 +113,7 @@ def HH_Neuron(curr, simtime):
     neuron.n = 0.317676914061
 
     # tracking parameters
-    rec = b2.StateMonitor(neuron, ['vm', 'I_e', 'm', 'n', 'h', 'w'], record=True)
+    rec = b2.StateMonitor(neuron, ['vm', 'I_e', 'm', 'n', 'h'], record=True)
 
     # running the simulation
     b2.run(simtime)
