@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 def tau_plot(hex, do_plot=False):
     plt.subplot(311)
-    plt.plot(hex.vm[0]/b2.mV, hex.tn[0]/b2.ms, 'blue', lw=2)
+    plt.plot(hex.vm[0]/b2.mV, hex.tn[0]/b2.ms, 'black', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('n')
     
     plt.subplot(312)
-    plt.plot(hex.vm[0]/b2.mV, hex.tm[0]/b2.ms, 'black', lw=2)
+    plt.plot(hex.vm[0]/b2.mV, hex.tm[0]/b2.ms, 'blue', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('m')
     
@@ -24,12 +24,12 @@ def tau_plot(hex, do_plot=False):
 
 def tau_plot_A(hex, do_plot=False):
     plt.subplot(411)
-    plt.plot(hex.vm[0]/b2.mV, hex.tn[0]/b2.ms, 'blue', lw=2)
+    plt.plot(hex.vm[0]/b2.mV, hex.tn[0]/b2.ms, 'black', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('n')
     
     plt.subplot(412)
-    plt.plot(hex.vm[0]/b2.mV, hex.tm[0]/b2.ms, 'black', lw=2)
+    plt.plot(hex.vm[0]/b2.mV, hex.tm[0]/b2.ms, 'blue', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('m')
     

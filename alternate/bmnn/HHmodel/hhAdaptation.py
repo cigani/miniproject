@@ -96,6 +96,9 @@ def HH_Neuron(curr, simtime):
     betah = 1./(1+exp(3.-.1*vm/mV))/ms : Hz
     betam = 4*exp(-.0556*vm/mV)/ms : Hz
     betan = .125*exp(-.0125*vm/mV)/ms : Hz
+    hi = alphah/(alphah+betah) : 1
+    mi = alpham/(alpham+betam) : 1
+    ni = alphan/(alphan+betan) : 1 
     dh/dt = alphah*(1-h)-betah*h : 1
     dm/dt = alpham*(1-m)-betam*m : 1
     dn/dt = alphan*(1-n)-betan*n : 1
@@ -121,7 +124,7 @@ def HH_Neuron(curr, simtime):
     neuron.n = 0.317676914061
 
     # tracking parameters
-    rec = b2.StateMonitor(neuron, ['vm', 'I_e', 'm', 'n', 'h', 'w', 'tm', 'tn', 'th', 'tw', 'NaI', 'KI', 'MI'], record=True)
+    rec = b2.StateMonitor(neuron, ['vm', 'I_e', 'm', 'n', 'h', 'w', 'mi', 'ni', 'hi', 'wi', 'tm', 'tn', 'th', 'tw', 'NaI', 'KI', 'MI'], record=True)
 
     # running the simulation
     b2.run(simtime)
