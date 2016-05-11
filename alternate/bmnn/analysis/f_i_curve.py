@@ -14,7 +14,7 @@ def f_i_curve(maxI, incr):
     curr = np.arange(0.0,maxI,incr)
     n=0
     nspike=[]
-    sPlts = len(modCount(curr,1))
+    sPlts = len(modCount(curr,3))
     print sPlts
     for i in curr:
         stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=i, tend=500, do_plot=False)
@@ -22,7 +22,7 @@ def f_i_curve(maxI, incr):
         v = stateMonitor.vm
         ns = sd.spikeRate(t,v,doPlot=False)[0]
         nspike.append(ns)
-        if i%1 == 0:
+        if i%3 == 0:
             print 'true'
             n=n+1
             plt.subplot(sPlts,1,n)
@@ -51,7 +51,7 @@ def f_i_curve_A(maxI, incr):
     curr = np.arange(0.0,maxI,incr)
     n=0
     nspike=[]
-    sPlts = len(modCount(curr,1))
+    sPlts = len(modCount(curr,3))
     print sPlts
     for i in curr:
         stateMonitor = hhA.HH_Step(I_tstart=20, I_tend=480, I_amp=i, tend=500, do_plot=False)
@@ -59,7 +59,7 @@ def f_i_curve_A(maxI, incr):
         v = stateMonitor.vm
         ns = sd.spikeRate(t,v,doPlot=False)[0]
         nspike.append(ns)
-        if i%1 == 0:
+        if i%3 == 0:
             print 'true'
             n=n+1
             plt.subplot(sPlts,1,n)
