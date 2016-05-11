@@ -24,4 +24,4 @@ sd.spikeRate(stateMonitor.t,stateMonitor.vm, vT=None, doPlot=True)
 
 # Plot data relevant to the F-I curve
 fi.f_i_curve_A(20, 0.5)
-    
+
