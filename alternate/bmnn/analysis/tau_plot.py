@@ -40,7 +40,8 @@ def tau_plot_A(hex, do_plot=False):
     
     plt.subplot(414)
     plt.plot(hex.vm[0]/b2.mV,hex.tw[0]/b2.ms, 'green', lw=2)
-
+    plt.ylabel('t [1/s]')
+    plt.legend('w')
     plt.xlabel('v [mV]')
     plt.suptitle('Activation/Deactivation time constants')
     plt.show()
