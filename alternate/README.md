@@ -9,6 +9,7 @@ easily seen.  Compare ex2.py (M-type) with
 ex3.py (AHP and M-ytpe).
 
 Also implemented adaptive HH model from the following paper2:
+
 1) The Effects of Spike Frequency Adaptation and Negative
 Feedback on the Synchronization of Neural Oscillators
 
