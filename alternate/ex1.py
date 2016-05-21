@@ -2,6 +2,7 @@
 
 import sys
 import matplotlib.pyplot as plt
+import seaborn
 from brian2 import *
 from operator import itemgetter
 from bmnn.HHmodel import hhNormal as hh
@@ -12,11 +13,11 @@ from bmnn.analysis import spikeDetector as sd
 from bmnn.analysis import f_i_curve as fi
 
 # Call the normal Hodgkin-Huxley Model and store values to the stateMonitor
-stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=20, tend=500, do_plot=False)
+stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=20, tend=600, do_plot=False)
 
 # Plot data relevant to the gating variables
 gti.gatevar(stateMonitor)
-# gt.gatevar(stateMonitor)
+gt.gatevar(stateMonitor)
 
 # Plot data relevant to the time constants
 tp.tau_plot(stateMonitor)
@@ -26,4 +27,4 @@ sd.spikeRate(stateMonitor.t,stateMonitor.vm, vT=None, doPlot=True)
 
 # Plot data relevant to the F-I curve
 fi.f_i_curve(20, 0.5)
-    
+

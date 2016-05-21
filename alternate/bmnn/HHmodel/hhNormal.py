@@ -12,8 +12,11 @@ Relevant book chapters:
 import brian2 as b2
 import matplotlib.pyplot as plt
 import numpy as np
-
-def plot_data(rec, title=None):
+from bmnn.analysis import save
+import os
+def plot_data(rec, title=None, writePlot=False,
+              path =
+              'Users/michaeljaquier/Documents/int/BMN/miniproject/res'):
     """Plots a TimedArray for values I and v
 
     Args:
@@ -54,10 +57,24 @@ def plot_data(rec, title=None):
 
     plt.xlabel('t (ms)')
     plt.ylabel('I (micro A)')
-
     if title is not None:
         plt.suptitle(title)
+    if writePlot:
+        #I have no idea why these don't work. They should. They don't
+        #epsName = os.path.join(path,'{}.eps'.format(title[1]))
+        #svgName = os.path.join(path,'{}.svg'.format(title[1]))
 
+        ''' I wonder if it's possible for me to feed the plot data into
+        another funciton. Problem is when plot.show() runs it seems to
+        purge the data from memory so i'm not sure how to extract it
+        without rewriting the entire plot idea and i don't want to do it
+        if i can help it'''
+
+        # White space removal and title generation
+        epsName = '{}.eps'.format(''.join(title.split()))
+        svgName = '{}.svg'.format(''.join(title.split()))
+        plt.savefig(epsName, format='eps',dpi=1000)
+        plt.savefig(svgName, format='svg', dpi=1200)
     plt.show()
 
 
@@ -126,7 +143,7 @@ def HH_Neuron(curr, simtime):
 
 
 def HH_Step(I_tstart=20, I_tend=180, I_amp=7,
-            tend=200, do_plot=True):
+            tend=200, do_plot=True, writePlot=False):
 
     """Run the Hodgkin-Huley neuron for a step current input.
 
@@ -148,8 +165,13 @@ def HH_Step(I_tstart=20, I_tend=180, I_amp=7,
     curr = b2.TimedArray(tmp, dt=1.*b2.ms)
 
     rec = HH_Neuron(curr, tend * b2.ms)
-
-    if do_plot:
+    if do_plot and writePlot:
+        plot_data(
+            rec,
+            title="Step current",
+            writePlot=True
+        )
+    elif do_plot:
         plot_data(
             rec,
             title="Step current",

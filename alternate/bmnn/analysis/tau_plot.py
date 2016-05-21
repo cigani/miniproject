@@ -20,6 +20,7 @@ def tau_plot(hex, do_plot=False):
 
     plt.xlabel('v [mV]')
     plt.suptitle('Activation/Deactivation time constants')
+    plt.savefig('tau_plot_act_deact.eps', format='eps', dpi=1200)
     plt.show()
 
 def tau_plot_A(hex, do_plot=False):
@@ -44,4 +45,5 @@ def tau_plot_A(hex, do_plot=False):
     plt.legend('w')
     plt.xlabel('v [mV]')
     plt.suptitle('Activation/Deactivation time constants')
+    plt.savefig('tau_plot_act_deact_a.eps', format='eps', dpi=1200)
     plt.show()

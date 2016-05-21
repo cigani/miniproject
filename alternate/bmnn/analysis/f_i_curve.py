@@ -8,7 +8,7 @@ from ..HHmodel import hhNormal as hh
 from ..HHmodel import hhAdaptation as hhA
 
 def modCount(values, x):
-    return {i for i in values if i % x ==0}
+    return {i for i in values if i % x==0}
 
 def f_i_curve(maxI, incr):
     curr = np.arange(0.0,maxI,incr)
@@ -17,7 +17,8 @@ def f_i_curve(maxI, incr):
     sPlts = len(modCount(curr,3))
     print sPlts
     for i in curr:
-        stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=i, tend=500, do_plot=False)
+        stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=i,
+                                  tend=650, do_plot=False)
         t = stateMonitor.t
         v = stateMonitor.vm
         ns = sd.spikeRate(t,v,doPlot=False)[0]
@@ -27,14 +28,18 @@ def f_i_curve(maxI, incr):
             n=n+1
             plt.subplot(sPlts,1,n)
             plt.plot(t/b2.ms, v[0]/b2.mV, label=str(i)+' uA')
+            plt.gca().xaxis.set_major_locator(plt.NullLocator())
             for s in sd.spikeGet(t/b2.ms,v/b2.mV,vT=None):
                 plt.plot([s,s],[np.min(v/b2.mV),np.max(v/b2.mV)],
                          c ='red')
-            plt.ylabel('mV')
-            plt.xlabel('ms')
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+            plt.ylabel('v [mV]')
             plt.legend(loc='upper right')
             plt.yticks(np.arange(min(v[0]/b2.mV), max(v[0]/b2.mV)+1, 50.0))
     plt.suptitle('Spike Rate with increasing input current')
+    plt.xticks(np.arange(min(t/b2.ms),max(t/b2.ms)+1, 100))
+    plt.xlabel('t [ms]')
+    plt.savefig('spikerate_inc_current.eps', format='eps', dpi=1200)
     plt.show()
     print 'length curr: '
     print curr
@@ -45,6 +50,7 @@ def f_i_curve(maxI, incr):
     plt.xlabel('Current [uA]')
     plt.suptitle('F-I curve')
     plt.axis((0.0,12, min(nspike), max(nspike)))
+    plt.savefig('f_i_curve.eps', format='eps', dpi=1200)
     plt.show()
 
 def f_i_curve_A(maxI, incr):
@@ -54,7 +60,8 @@ def f_i_curve_A(maxI, incr):
     sPlts = len(modCount(curr,3))
     print sPlts
     for i in curr:
-        stateMonitor = hhA.HH_Step(I_tstart=20, I_tend=480, I_amp=i, tend=500, do_plot=False)
+        stateMonitor = hhA.HH_Step(I_tstart=20, I_tend=480, I_amp=i,
+                                   tend=650, do_plot=False)
         t = stateMonitor.t
         v = stateMonitor.vm
         ns = sd.spikeRate(t,v,doPlot=False)[0]

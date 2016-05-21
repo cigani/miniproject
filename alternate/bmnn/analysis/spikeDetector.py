@@ -2,7 +2,7 @@ import brian2 as b2
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy import array
-
+import switchPlot as sP
 def spikeGet(t,v,vT=None):
     """  Extract spike time using boolean logic. Seperate array at T/F
          order offset one place, compare and detect.
@@ -45,21 +45,20 @@ def spikeRate(t,v, vT=None, doPlot=False):
     sr = spikeGet(t/b2.ms,v/b2.mV,vT=None)
 
     if doPlot:
-        plt.plot(t/b2.ms, v[0]/b2.mV, c='blue', lw=2)
-        for s in sr:
-            print s
-            print np.min(v[0]/b2.mV)
-            print np.max(v[0]/b2.mV)
-            plt.plot((s,s),
-            (np.min(v[0]/b2.mV),np.max(v[0]/b2.mV)),
-            c='red'
-            )
+       sP.casePlot('Voltage Trace and Spike Points',t/b2.ms ,v[0]/b2.mV,
+                   'v [mv]','t [ms]', ('vm','spikes'), 'sd', sr)
+
+
+       ''' plt.plot(t/b2.ms, v[0]/b2.mV, c='blue', lw=2)
+        #REMOVED:  no idea why i decided this needed a loop
+        plt.plot((sr,sr),
+        (np.min(v[0]/b2.mV),np.max(v[0]/b2.mV)), c='red')
         plt.ylabel('v [mV]')
         plt.xlabel('t [ms]')
         plt.suptitle('Voltage Trace and Spike points')
         plt.legend(('vm', 'spikes'))
         plt.grid()
-        plt.show()
+        plt.show()'''
 
     # no spike or single spike detection
     if len(sr)<2:
