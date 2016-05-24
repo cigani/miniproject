@@ -1,13 +1,14 @@
 import matplotlib.pyplot as plt
+import seaborn
 import numpy as np
 import brian2 as b2
 
 def gatevar(hex):
 
-    traceall = np.append(hex.m[0], [hex.n[0], hex.h[0]])
+    traceall = np.append(hex.mi[0], [hex.ni[0], hex.hi[0]])
     nrmfactor = np.max(traceall)/b2.mV
 
-    # Plot of activation variables (inf variants) vs time
+    # Plot of activation variables vs time
     plt.subplot(411)
     plt.grid()
     plt.plot(hex.t/b2.ms, hex.vm[0]/b2.mV, lw=2)
@@ -46,19 +47,19 @@ def gatevar(hex):
     plt.show()
 
     plt.subplot(311)
-    plt.plot(hex.vm[0]/b2.mV, hex.n[0] /nrmfactor /b2.mV, 'black', lw=2)
-    plt.ylabel('A.U')
-    plt.legend('ninf')
+    plt.plot(hex.vm[0]/b2.mV, hex.n[0] /nrmfactor/b2.mV, 'black', lw=2)
+    plt.ylabel('act./deact.')
+    plt.legend('n')
     plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(312)
     plt.plot(hex.vm[0]/b2.mV, hex.m[0] /nrmfactor /b2.mV, 'blue', lw=2)
-    plt.ylabel('A.U')
-    plt.legend('minf')
+    plt.ylabel('act./deact.')
+    plt.legend('m')
     plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(313)
     plt.plot(hex.vm[0]/b2.mV, hex.h[0] /nrmfactor /b2.mV, 'red', lw=2)
-    plt.ylabel('A.U')
-    plt.legend('hinf')
+    plt.ylabel('act./deact')
+    plt.legend('h')
     plt.xlabel('v [mV]')
     plt.suptitle('Activation/Deactivation vs Voltage')
     plt.savefig('act_deact_vs_volt_mhn.eps', format='eps', dpi=1200)
@@ -67,7 +68,7 @@ def gatevar(hex):
 
 def gatevar_A(hex):
 
-    traceall = np.append(hex.m[0], [hex.n[0], hex.h[0]])
+    traceall = np.append(hex.mi[0], [hex.ni[0], hex.hi[0]])
     nrmfactor = np.max(traceall)/b2.mV
 
     # Plot of activation variables (inf variants) vs time
