@@ -43,19 +43,19 @@ def gatevar(hex):
     plt.subplot(311)
     plt.plot(hex.vm[0]/b2.mV, hex.ni[0] /nrmfactor /b2.mV,
              'black', lw=2, label='ninf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(312)
     plt.plot(hex.vm[0]/b2.mV, hex.mi[0] /nrmfactor /b2.mV,
              'blue', lw=2, label='minf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(313)
     plt.plot(hex.vm[0]/b2.mV, hex.hi[0] /nrmfactor /b2.mV,
              'red', lw=2, label='hinf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.xlabel('v [mV]')
     plt.suptitle('Activation/Deactivation vs Voltage')
@@ -68,7 +68,7 @@ def gatevar_A(hex):
     traceall = np.append(hex.mi[0], [hex.ni[0], hex.hi[0]])
     nrmfactor = np.max(traceall)/b2.mV
 
-    # Plot of activation variables (inf variants) vs time
+
     plt.subplot(411)
     plt.grid()
     plt.plot(hex.t/b2.ms, hex.vm[0]/b2.mV, lw=2)
@@ -76,19 +76,23 @@ def gatevar_A(hex):
     plt.ylabel('v [mV]')
 
     plt.subplot(412)
-    plt.plot(hex.t/b2.ms, hex.ni[0] / nrmfactor / b2.mV, 'black',lw=2,label='ninf')
+    plt.plot(hex.t/b2.ms, hex.n[0] / nrmfactor / b2.mV,
+             'black',lw=2,label='n')
     plt.ylabel('act./inact.')
     plt.xlabel('t [ms]')
 
-    plt.plot(hex.t/b2.ms, hex.mi[0] / nrmfactor /b2.mV, 'blue', lw=2,label='minf')
+    plt.plot(hex.t/b2.ms, hex.m[0] / nrmfactor /b2.mV, 'blue',
+             lw=2,label='m')
     plt.ylabel('act./inact.')
     plt.xlabel('t [ms]')
 
-    plt.plot(hex.t/b2.ms, hex.hi[0] / nrmfactor /b2.mV, 'red', lw=2,label='hinf')
+    plt.plot(hex.t/b2.ms, hex.h[0] / nrmfactor /b2.mV, 'red',
+             lw=2,label='h')
     plt.ylabel('act./inact.')
     plt.xlabel('t [ms]')
 
-    plt.plot(hex.t/b2.ms, hex.w[0] / nrmfactor /b2.mV, 'green', lw=2,label='winf')
+    plt.plot(hex.t/b2.ms, hex.w[0] / nrmfactor /b2.mV, 'green',
+             lw=2,label='w')
     plt.ylabel('act./inact.')
     plt.xlabel('t [ms]')
 
@@ -112,19 +116,19 @@ def gatevar_A(hex):
 
     plt.subplot(411)
     plt.plot(hex.vm[0]/b2.mV, hex.ni[0] /nrmfactor /b2.mV, 'black', lw=2, label='ninf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.subplot(412)
     plt.plot(hex.vm[0]/b2.mV, hex.mi[0] /nrmfactor /b2.mV, 'blue', lw=2, label='minf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.subplot(413)
     plt.plot(hex.vm[0]/b2.mV, hex.hi[0] /nrmfactor /b2.mV, 'red', lw=2, label='hinf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.subplot(414)
     plt.plot(hex.vm[0]/b2.mV, hex.wi[0] /nrmfactor /b2.mV, 'green', lw=2, label='winf')
-    plt.ylabel('A.U')
+    plt.ylabel('act.deact')
     plt.legend(loc='upper right')
     plt.xlabel('v [mV]')
     plt.suptitle('Activation/Deactivation vs Voltage')
