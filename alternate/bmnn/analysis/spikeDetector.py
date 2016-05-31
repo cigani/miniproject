@@ -45,8 +45,9 @@ def spikeRate(t,v, vT=None, doPlot=False):
     sr = spikeGet(t/b2.ms,v/b2.mV,vT=None)
 
     if doPlot:
-       sP.casePlot('Voltage Trace and Spike Points',t/b2.ms ,v[0]/b2.mV,
-                   'v [mv]','t [ms]', ('vm','spikes'), 'sd', sr)
+       plot_data = sP.casePlot(
+           'Voltage Trace and Spike Points',t/b2.ms ,v[0]/b2.mV,
+           'v [mv]','t [ms]', ('vm','spikes'), 'sd', sr)
 
 
        ''' plt.plot(t/b2.ms, v[0]/b2.mV, c='blue', lw=2)
@@ -70,5 +71,5 @@ def spikeRate(t,v, vT=None, doPlot=False):
     # convert from ms to Hz
     f =1000.0/srF.mean()
 
-    return (f,fstd)
+    return (f,fstd,plot_data)
 

@@ -28,17 +28,19 @@ def tau_plot_A(hex, do_plot=False):
     plt.plot(hex.vm[0]/b2.mV, hex.tn[0]/b2.ms, 'black', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('n')
-    
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(412)
     plt.plot(hex.vm[0]/b2.mV, hex.tm[0]/b2.ms, 'blue', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('m')
     
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(413)
     plt.plot(hex.vm[0]/b2.mV, hex.th[0]/b2.ms, 'red', lw=2)
     plt.ylabel('t [1/s]')
     plt.legend('h')
     
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.subplot(414)
     plt.plot(hex.vm[0]/b2.mV,hex.tw[0]/b2.ms, 'green', lw=2)
     plt.ylabel('t [1/s]')

@@ -1,3 +1,13 @@
+"""Switch to choose a plotting method. Returns the axes necessary to add to
+plot.
+
+    Usage:
+        fig = plt.figure(PARAMS)
+        fig.add_subplot(###)
+        functionCall(PARAMS)[Tuple Index of host functionCall]
+        plt.show()
+"""
+
 import seaborn
 import matplotlib.pyplot as plt
 import sys
@@ -38,12 +48,13 @@ def unitPlot(string):
 def casePlot(title, xval, yval, ylbl, xlbl, lgnd, plotType, args):
     for case in switchPlot(plotType):
         if case('sd'):
+            p = plt.gca()
             epsName = '{}.eps'.format(''.join(title.split()))
             svgName = '{}.svg'.format(''.join(title.split()))
-            plt.plot(xval,
+            plot = p.plot(xval,
                      yval,
                      c='blue',lw=2)
-            plt.plot((args,args),
+            plot = p.plot((args,args),
                      (np.min(yval),
                       np.max(yval)),
                      c='red')
@@ -52,14 +63,4 @@ def casePlot(title, xval, yval, ylbl, xlbl, lgnd, plotType, args):
             plt.legend((lgnd))
             plt.grid()
             plt.savefig(epsName, format='eps', dpi=1200)
-            plt.savefig(svgName, format='svg', dpi=1200)
-
-'''
-assert unitPlot('v [mV]')==b2.mV
-assert unitPlot('t [ms]')==b2.ms
-assert unitPlot('Trace Voltage and Spike')==b2.mV
-assert unitPlot('amp')==b2.uamp
-'''
-
-
-
+            return(plot)

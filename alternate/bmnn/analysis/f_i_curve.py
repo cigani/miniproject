@@ -35,7 +35,11 @@ def f_i_curve(maxI, incr):
                 plt.gca().xaxis.set_major_locator(plt.NullLocator())
             plt.ylabel('v [mV]')
             plt.legend(loc='upper right')
-            plt.yticks(np.arange(min(v[0]/b2.mV), max(v[0]/b2.mV)+1, 50.0))
+           # plt.yticks(np.arange(min(v[0]/b2.mV), max(v[0]/b2.mV)+1, 50.0))
+            plt.yticks(np.rint(np.linspace(
+                           min(v[0]/b2.mV),
+                           max(v[0]/b2.mV)+
+                           max(v[0]/b2.mV)/20,3)))
     plt.suptitle('Spike Rate with increasing input current')
     plt.xticks(np.arange(min(t/b2.ms),max(t/b2.ms)+1, 100))
     plt.xlabel('t [ms]')
@@ -49,7 +53,8 @@ def f_i_curve(maxI, incr):
     plt.ylabel('Spikecount [1/s]')
     plt.xlabel('Current [uA]')
     plt.suptitle('F-I curve')
-    plt.axis((0.0,12, min(nspike), max(nspike)))
+    plt.axis((0,max(curr)+1, min(nspike),
+              np.rint(max(nspike)*1.1)))
     plt.savefig('f_i_curve.eps', format='eps', dpi=1200)
     plt.show()
 
@@ -57,16 +62,16 @@ def f_i_curve_A(maxI, incr):
     curr = np.arange(0.0,maxI,incr)
     n=0
     nspike=[]
-    sPlts = len(modCount(curr,3))
+    sPlts = len(modCount(curr,5))
     print sPlts
     for i in curr:
-        stateMonitor = hhA.HH_Step(I_tstart=20, I_tend=480, I_amp=i,
-                                   tend=650, do_plot=False)
+        stateMonitor = hhA.HH_Step(I_tstart=20, I_tend=350, I_amp=i,
+                                   tend=350, do_plot=False)
         t = stateMonitor.t
         v = stateMonitor.vm
         ns = sd.spikeRate(t,v,doPlot=False)[0]
         nspike.append(ns)
-        if i%3 == 0:
+        if i%5 == 0:
             print 'true'
             n=n+1
             plt.subplot(sPlts,1,n)
@@ -75,10 +80,16 @@ def f_i_curve_A(maxI, incr):
                 plt.plot([s,s],[np.min(v/b2.mV),np.max(v/b2.mV)],
                          c ='red')
             plt.ylabel('mV')
-            plt.xlabel('ms')
             plt.legend(loc='upper right')
-            plt.yticks(np.arange(min(v[0]/b2.mV), max(v[0]/b2.mV)+1, 50.0))
+            plt.gca().xaxis.set_major_locator(plt.NullLocator())
+            plt.yticks(np.rint(np.linspace(
+                           min(v[0]/b2.mV),
+                           max(v[0]/b2.mV)+
+                           max(v[0]/b2.mV)/20,3)))
     plt.suptitle('Spike Rate with increasing input current')
+    plt.xticks(np.arange(min(t/b2.ms),max(t/b2.ms)+1, 25))
+    plt.xlabel('t [ms]')
+    plt.savefig('spikerate_inc_current_a.eps', format='eps', dpi=1200)
     plt.show()
     print 'length curr: '
     print curr
@@ -88,5 +99,7 @@ def f_i_curve_A(maxI, incr):
     plt.ylabel('Spikecount [1/s]')
     plt.xlabel('Current [uA]')
     plt.suptitle('F-I curve')
-    plt.axis((0.0,12, min(nspike), max(nspike)))
+    plt.axis((0,max(curr)+1, min(nspike),
+              np.rint(max(nspike)*1.1)))
+    plt.savefig('f_i_curve_a.eps', format='eps', dpi=1200)
     plt.show()

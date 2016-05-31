@@ -13,7 +13,8 @@ from bmnn.analysis import spikeDetector as sd
 from bmnn.analysis import f_i_curve as fi
 
 # Call the normal Hodgkin-Huxley Model and store values to the stateMonitor
-stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=20, tend=600, do_plot=False)
+stateMonitor = hh.HH_Step(I_tstart=35, I_tend=55, I_amp=20, tend=80,
+                          do_plot=False)
 
 # Plot data relevant to the gating variables
 gti.gatevar(stateMonitor)
@@ -22,9 +23,11 @@ gt.gatevar(stateMonitor)
 # Plot data relevant to the time constants
 tp.tau_plot(stateMonitor)
 
+stateMonitor1 = hh.HH_Step(I_tstart=50, I_tend=150, I_amp=20, tend=200,
+                          do_plot=False)
 # Plot data relevant to the spike times of the simulation
-sd.spikeRate(stateMonitor.t,stateMonitor.vm, vT=None, doPlot=True)
+sd.spikeRate(stateMonitor1.t,stateMonitor1.vm, vT=None, doPlot=True)
 
 # Plot data relevant to the F-I curve
-fi.f_i_curve(20, 0.5)
+fi.f_i_curve(10, 0.1)
 

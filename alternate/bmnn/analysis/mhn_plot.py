@@ -75,7 +75,7 @@ def gatevar_A(hex):
     plt.subplot(411)
     plt.grid()
     plt.plot(hex.t/b2.ms, hex.vm[0]/b2.mV, lw=2)
-    plt.xlabel('t [ms]')
+
     plt.gca().xaxis.set_major_locator(plt.NullLocator())
 
     plt.subplot(412)
