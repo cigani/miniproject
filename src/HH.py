@@ -12,11 +12,9 @@ Relevant book chapters:
 import brian2 as b2
 import matplotlib.pyplot as plt
 import numpy as np
-from bmnn.analysis import save
-import os
-def plot_data(rec, title=None, writePlot=False,
-              path =
-              'Users/michaeljaquier/Documents/int/BMN/miniproject/res'):
+
+
+def plot_data(rec, title=None):
     """Plots a TimedArray for values I and v
 
     Args:
@@ -57,24 +55,10 @@ def plot_data(rec, title=None, writePlot=False,
 
     plt.xlabel('t (ms)')
     plt.ylabel('I (micro A)')
+
     if title is not None:
         plt.suptitle(title)
-    if writePlot:
-        #I have no idea why these don't work. They should. They don't
-        #epsName = os.path.join(path,'{}.eps'.format(title[1]))
-        #svgName = os.path.join(path,'{}.svg'.format(title[1]))
 
-        ''' I wonder if it's possible for me to feed the plot data into
-        another funciton. Problem is when plot.show() runs it seems to
-        purge the data from memory so i'm not sure how to extract it
-        without rewriting the entire plot idea and i don't want to do it
-        if i can help it'''
-
-        # White space removal and title generation
-        epsName = '{}.eps'.format(''.join(title.split()))
-        svgName = '{}.svg'.format(''.join(title.split()))
-        plt.savefig(epsName, format='eps',dpi=1000)
-        plt.savefig(svgName, format='svg', dpi=1200)
     plt.show()
 
 
@@ -88,7 +72,7 @@ def HH_Neuron(curr, simtime):
 
     Returns:
         StateMonitor: Brian2 StateMonitor with recorded fields
-        ['vm', 'I_e', 'm', 'n', 'h', 'tm', 'tn', 'th', 'NaI', 'KI']
+        ['vm', 'I_e', 'm', 'n', 'h']
     """
 
     # neuron parameters
@@ -97,7 +81,7 @@ def HH_Neuron(curr, simtime):
     ENa = 115 * b2.mV
     gl = 0.3 * b2.msiemens
     gK = 36 * b2.msiemens
-    gNa = 1.5 * 120 * b2.msiemens
+    gNa = 1.5 * 120 * b2.msiemens # Edited to account for a 1.5 - fold increase in Na channel density
     C = 1 * b2.ufarad
 
     # forming HH model with differential equations
@@ -111,18 +95,10 @@ def HH_Neuron(curr, simtime):
     betah = 1./(1+exp(3.-.1*vm/mV))/ms : Hz
     betam = 4*exp(-.0556*vm/mV)/ms : Hz
     betan = .125*exp(-.0125*vm/mV)/ms : Hz
-    hi = alphah/(alphah+betah) : 1
-    mi = alpham/(alpham+betam) : 1
-    ni = alphan/(alphan+betan) : 1
     dh/dt = alphah*(1-h)-betah*h : 1
     dm/dt = alpham*(1-m)-betam*m : 1
     dn/dt = alphan*(1-n)-betan*n : 1
     dvm/dt = membrane_Im/C : volt
-    th = 1/(alphah+betah) : second
-    tm = 1/(alpham+betam) : second
-    tn = 1/(alphan+betan) : second
-    NaI = gNa*m**3*h*(ENa-vm) : amp
-    KI = gK*n**4*(EK-vm) : amp
     '''
 
     neuron = b2.NeuronGroup(1, eqs, method='exponential_euler')
@@ -134,7 +110,7 @@ def HH_Neuron(curr, simtime):
     neuron.n = 0.317676914061
 
     # tracking parameters
-    rec = b2.StateMonitor(neuron, ['vm', 'I_e', 'm', 'n', 'h', 'mi', 'ni', 'hi', 'tm', 'tn', 'th', 'NaI', 'KI'], record=True)
+    rec = b2.StateMonitor(neuron, ['vm', 'I_e', 'm', 'n', 'h'], record=True)
 
     # running the simulation
     b2.run(simtime)
@@ -143,7 +119,7 @@ def HH_Neuron(curr, simtime):
 
 
 def HH_Step(I_tstart=20, I_tend=180, I_amp=7,
-            tend=200, do_plot=True, writePlot=False):
+            tend=200, do_plot=True):
 
     """Run the Hodgkin-Huley neuron for a step current input.
 
@@ -165,13 +141,8 @@ def HH_Step(I_tstart=20, I_tend=180, I_amp=7,
     curr = b2.TimedArray(tmp, dt=1.*b2.ms)
 
     rec = HH_Neuron(curr, tend * b2.ms)
-    if do_plot and writePlot:
-        plot_data(
-            rec,
-            title="Step current",
-            writePlot=True
-        )
-    elif do_plot:
+
+    if do_plot:
         plot_data(
             rec,
             title="Step current",
@@ -179,3 +150,72 @@ def HH_Step(I_tstart=20, I_tend=180, I_amp=7,
 
     return rec
 
+
+def HH_Sinus(I_freq=0.01, I_offset=0.5, I_amp=7.,
+             tend=600, dt=.1, do_plot=True):
+    """
+    Run the HH model for a sinusoidal current
+
+    Args:
+        tend (float, optional): the simulation time of the model [ms]
+        I_freq (float, optional): frequency of current sinusoidal [kHz]
+        I_offset (float, optional): DC offset of current [nA]
+        I_amp (float, optional): amplitude of sinusoidal [nA]
+        do_plot (bool, optional): plot the resulting simulation
+
+    Returns:
+        StateMonitor: Brian2 StateMonitor with input current (I) and
+        voltage (V) recorded
+    """
+
+    # dt sampled sinusoidal function
+    t = np.arange(0, tend, dt)
+    tmp = (I_amp*np.sin(2.0*np.pi*I_freq*t)+I_offset) * b2.uamp
+    curr = b2.TimedArray(tmp, dt=dt*b2.ms)
+
+    rec = HH_Neuron(curr, tend * b2.ms)
+
+    if do_plot:
+        plot_data(
+            rec,
+            title="Sinusoidal current",
+        )
+
+    return rec
+
+
+def HH_Ramp(I_tstart=30, I_tend=270, I_amp=20.,
+            tend=300, dt=.1, do_plot=True):
+    """
+    Run the HH model for a sinusoidal current
+
+    Args:
+        tend (float, optional): the simulation time of the model [ms]
+        I_tstart (float, optional): start of current ramp [ms]
+        I_tend (float, optional): end of the current ramp [ms]
+        I_amp (float, optional): final amplitude of current ramp [uA]
+        do_plot (bool, optional): plot the resulting simulation
+
+    Returns:
+        StateMonitor: Brian2 StateMonitor with input current (I) and
+        voltage (V) recorded
+    """
+
+    # dt sampled sinusoidal function
+    t = np.arange(0, tend, dt)
+    tmp = np.zeros_like(t)
+    index_start = np.searchsorted(t, I_tstart)
+    index_end = np.searchsorted(t, I_tend)
+    tmp[index_start:index_end] = np.arange(0, index_end-index_start, 1.0) \
+        / (index_end-index_start) * I_amp
+    curr = b2.TimedArray(tmp * b2.uamp, dt=dt*b2.ms)
+
+    rec = HH_Neuron(curr, tend * b2.ms)
+
+    if do_plot:
+        plot_data(
+            rec,
+            title="Sinusoidal current",
+        )
+
+    return rec

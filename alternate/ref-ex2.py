@@ -12,7 +12,8 @@ from bmnn.analysis import spikeDetector as sd
 from bmnn.analysis import f_i_curve as fi
 
 # Call the normal Hodgkin-Huxley Model and store values to the stateMonitor
-stateMonitor = hh.HH_Step(I_tstart=20, I_tend=480, I_amp=2.5, tend=500, do_plot=False)
+stateMonitor = hh.HH_Step(I_tstart=35, I_tend=55, I_amp=20, tend=80,
+                          do_plot=False)
 
 # Plot data relevant to the gating variables
 gti.gatevar_A(stateMonitor)
